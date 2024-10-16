@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { Link, Tabs } from 'expo-router'
-import { Pressable } from 'react-native'
+import { Link, Redirect, router, Tabs } from 'expo-router'
+import { Button, Pressable } from 'react-native'
 
 import Colors from '@/constants/Colors'
 import { useColorScheme } from '@/components/useColorScheme'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
+import { signOut, getAuth } from 'firebase/auth'
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string }) {
@@ -14,6 +15,11 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['nam
 
 export default function TabLayout() {
 	const colorScheme = useColorScheme()
+	const auth = getAuth()
+
+	if (getAuth().currentUser === null) {
+		return <Redirect href="/auth" />
+	}
 
 	return (
 		<Tabs
@@ -30,18 +36,7 @@ export default function TabLayout() {
 					title: 'Tab One',
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
 					headerRight: () => (
-						<Link href="/modal" asChild>
-							<Pressable>
-								{({ pressed }) => (
-									<FontAwesome
-										name="info-circle"
-										size={25}
-										color={Colors[colorScheme ?? 'light'].text}
-										style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-									/>
-								)}
-							</Pressable>
-						</Link>
+						<Button title="Logout" onPress={() => signOut(auth).then(() => router.replace('/auth'))} />
 					),
 				}}
 			/>
@@ -49,13 +44,6 @@ export default function TabLayout() {
 				name="two"
 				options={{
 					title: 'Tab Two',
-					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-				}}
-			/>
-			<Tabs.Screen
-				name="auth/index"
-				options={{
-					title: 'Auth',
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
 				}}
 			/>
