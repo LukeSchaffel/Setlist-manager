@@ -18,7 +18,7 @@ const Input = (props: InputProps) => {
 
 	return (
 		<View style={[styles.wrapper]}>
-			{label && <Text style={[styles.labelText, { color: textColor }]}>{label}</Text>}
+			{label && <Label label={label} />}
 			<TextInput
 				onFocus={() => setIsFocused(true)}
 				onBlur={() => setIsFocused(false)}
@@ -26,6 +26,17 @@ const Input = (props: InputProps) => {
 				{...otherProps}
 			/>
 		</View>
+	)
+}
+
+const Label = (props: InputProps) => {
+	const { style, lightColor, darkColor, label, children, ...otherProps } = props
+	const textColor = useThemeColor({}, 'primary')
+	return (
+		<>
+			<Text style={[styles.labelText, { color: textColor }, style]}>{label}</Text>
+			{children && children}
+		</>
 	)
 }
 
@@ -55,11 +66,11 @@ const Password = (props: InputProps) => {
 }
 
 Input.Password = Password
+Input.Label = Label
 
 const styles = StyleSheet.create({
 	wrapper: {
 		width: '100%',
-		padding: 16,
 	},
 	input: {
 		borderBottomWidth: 1,

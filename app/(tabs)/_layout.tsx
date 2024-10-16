@@ -33,7 +33,7 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name="index"
 				options={{
-					title: 'Tab One',
+					title: 'Create set list',
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
 					headerRight: () => (
 						<Button title="Logout" onPress={() => signOut(auth).then(() => router.replace('/auth'))} />
