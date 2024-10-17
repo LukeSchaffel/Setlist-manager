@@ -26,7 +26,7 @@ export default function TabOneScreen() {
 			const newSetlistId = newSetlistRef.key
 
 			const setlistData = {
-				date: dayjs(data.date).format('MM/DD/YYYY'),
+				date: dayjs(data.date).toISOString(),
 				name: data.name,
 				owner: auth.currentUser.uid,
 			}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Button, Alert } from 'react-native'
 import { push, ref, set } from 'firebase/database'
 import { Redirect, router } from 'expo-router'
@@ -19,6 +19,7 @@ const AuthScreen = () => {
 	const [password, setPassword] = useState('')
 	const { setUser } = useContext(AppContext)
 	const [page, setPage] = useState<'signup' | 'login'>('signup')
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
 
 	const handleCreateAccount = async () => {
 		try {
@@ -51,8 +52,8 @@ const AuthScreen = () => {
 		}
 	}
 
-	if (getAuth().currentUser) {
-		return <Redirect href="/(tabs)" />
+	if (auth?.currentUser) {
+		return <Redirect href="/(setlists)" />
 	}
 
 	return (
