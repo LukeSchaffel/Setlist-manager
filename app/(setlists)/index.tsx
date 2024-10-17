@@ -2,11 +2,10 @@ import { StyleSheet, FlatList } from 'react-native'
 import dayjs from 'dayjs'
 
 import { auth, db } from '../_layout'
-import { Text, View } from '@/components/Themed'
+import { Text, View, useThemeColor } from '@/components'
 import { Divider } from '@/components'
 import { useEffect, useState } from 'react'
 import { get, onValue, ref } from 'firebase/database'
-import { useThemeColor } from '@/components/Themed'
 
 export default function TabTwoScreen() {
 	const [setlists, setSetlists] = useState<any[]>([])

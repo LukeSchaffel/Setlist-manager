@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { StyleSheet, Button, Alert } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { push, ref, set } from 'firebase/database'
 import { Redirect, router } from 'expo-router'
 
-import { Text, View } from '@/components/Themed'
-import { Input } from '@/components'
+import { Text, View, Button, Input, Divider } from '@/components'
 import { AppContext, auth, db } from '@/app/_layout'
 import {
 	signInWithEmailAndPassword,
@@ -18,8 +17,7 @@ const AuthScreen = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const { user } = useContext(AppContext)
-	const [page, setPage] = useState<'signup' | 'login'>('signup')
-	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [page, setPage] = useState<'signup' | 'login'>('login')
 
 	const handleCreateAccount = async () => {
 		try {
@@ -58,21 +56,27 @@ const AuthScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>{page === 'login' ? 'Login' : 'Sign Up'}</Text>
-			<View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-			<Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
-			<Input.Password label="Password" value={password} onChangeText={setPassword} />
-			{page === 'signup' ? (
-				<>
-					<Button title="Create account" onPress={handleCreateAccount} />
-					<Button title="Already have an account?" onPress={() => setPage('login')} />
-				</>
-			) : (
-				<>
-					<Button title="Login" onPress={login} />
-					<Button title="Dont have an account yet?" onPress={() => setPage('signup')} />
-				</>
-			)}
+			<View>
+				<Text style={styles.title}>{page === 'login' ? 'Login' : 'Sign Up'}</Text>
+				<Divider full />
+			</View>
+			<View>
+				<Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+				<Input.Password label="Password" value={password} onChangeText={setPassword} />
+			</View>
+			<View>
+				{page === 'signup' ? (
+					<>
+						<Button.Primary onPress={handleCreateAccount}>Create account</Button.Primary>
+						<Button onPress={() => setPage('login')}>Already have an account?</Button>
+					</>
+				) : (
+					<>
+						<Button.Primary onPress={login}>Login</Button.Primary>
+						<Button.Link onPress={() => setPage('signup')}>Create account</Button.Link>
+					</>
+				)}
+			</View>
 		</View>
 	)
 }
@@ -82,9 +86,9 @@ export default AuthScreen
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		padding: 16
+		padding: 16,
+		gap: 16,
+		justifyContent: 'space-evenly',
 	},
 	title: {
 		fontSize: 20,

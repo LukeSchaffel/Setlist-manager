@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { TextInput, TextInputProps, StyleSheet, Button, Pressable } from 'react-native'
 import { useThemeColor } from './Themed'
 
-import { View, Text } from './Themed'
+import { View, Text } from '.'
 
 interface InputProps extends TextInputProps {
 	lightColor?: string
@@ -71,6 +71,7 @@ Input.Label = Label
 const styles = StyleSheet.create({
 	wrapper: {
 		width: '100%',
+		marginBottom: 16,
 	},
 	input: {
 		borderBottomWidth: 1,

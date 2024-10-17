@@ -3,7 +3,6 @@ import { useForm, Controller, set } from 'react-hook-form'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 import dayjs from 'dayjs'
-import { Text } from './Themed'
 import Input from './Input'
 import { Button } from 'react-native'
 

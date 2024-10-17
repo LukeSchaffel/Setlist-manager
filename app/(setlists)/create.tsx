@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { useForm, Controller } from 'react-hook-form'
 import { push, ref, update } from 'firebase/database'
 
-import { Text, View } from '@/components/Themed'
+import { Text, View } from '@/components'
 import { Input, DatePickerFormItem } from '@/components'
 import { db, auth } from '../_layout'
 
