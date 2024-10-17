@@ -17,7 +17,7 @@ import {
 const AuthScreen = () => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const { setUser } = useContext(AppContext)
+	const { user } = useContext(AppContext)
 	const [page, setPage] = useState<'signup' | 'login'>('signup')
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
 
@@ -52,7 +52,7 @@ const AuthScreen = () => {
 		}
 	}
 
-	if (auth?.currentUser) {
+	if (user) {
 		return <Redirect href="/(setlists)" />
 	}
 
@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		padding: 16
 	},
 	title: {
 		fontSize: 20,

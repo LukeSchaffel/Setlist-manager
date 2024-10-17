@@ -7,6 +7,7 @@ import Colors from '@/constants/Colors'
 import { useColorScheme } from '@/components/useColorScheme'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import { signOut, getAuth } from 'firebase/auth'
+import { AppContext } from '../_layout'
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string }) {
@@ -16,8 +17,9 @@ function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['nam
 export default function TabLayout() {
 	const colorScheme = useColorScheme()
 	const auth = getAuth()
-
-	if (getAuth().currentUser === null) {
+	const { user } = useContext(AppContext)
+	
+	if (!user) {
 		return <Redirect href="/auth" />
 	}
 

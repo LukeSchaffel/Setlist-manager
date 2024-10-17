@@ -10,11 +10,11 @@ import { createContext } from 'react'
 import { firebaseConfig } from '@/firebaseConfig'
 import { useColorScheme } from '@/components/useColorScheme'
 import { initializeApp } from 'firebase/app'
-import { getAuth, initializeAuth, Auth, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, initializeAuth, Auth, createUserWithEmailAndPassword, onAuthStateChanged, User } from 'firebase/auth'
 //@ts-ignore
 import { getReactNativePersistence } from '@firebase/auth/dist/rn/index.js'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'
-import { getDatabase } from "firebase/database";
+import { getDatabase } from 'firebase/database'
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig)
@@ -70,8 +70,20 @@ export const AppContext = createContext<IAppContext>({})
 function RootLayoutNav() {
 	const colorScheme = useColorScheme()
 
+	const [user, setUser] = useState<User | null>(null)
+
+	useEffect(() => {
+		const auth = getAuth()
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			setUser(user)
+		})
+
+		// Clean up the listener on unmount
+		return () => unsubscribe()
+	}, [])
+
 	return (
-		<AppContext.Provider value={{}}>
+		<AppContext.Provider value={{ user }}>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 				<Stack>
 					<Stack.Screen name="(setlists)" options={{ headerShown: false }} />
