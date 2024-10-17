@@ -1,11 +1,12 @@
 import { StyleSheet, FlatList } from 'react-native'
 import dayjs from 'dayjs'
 
-import { auth, db } from '../_layout'
+import { auth, db } from '../../_layout'
 import { Text, View, useThemeColor } from '@/components'
 import { Divider } from '@/components'
 import { useEffect, useState } from 'react'
 import { get, onValue, ref } from 'firebase/database'
+import { Link } from 'expo-router'
 
 export default function TabTwoScreen() {
 	const [setlists, setSetlists] = useState<any[]>([])
@@ -40,19 +41,26 @@ export default function TabTwoScreen() {
 		const day = dayjs(date).format('DD')
 		const year = dayjs(date).format('YYYY')
 		return (
-			<View style={styles.listItem}>
-				<View style={[styles.listItemLeft]}>
-					<View style={[styles.dateBox, { borderColor: primary }]}>
-						<Text style={styles.month}>{month}</Text>
-						<Text style={styles.day}>{day}</Text>
-						<Text style={styles.year}> {year}</Text>
-					</View>
-					<View>
-						<Text style={styles.titleText}>{name}</Text>
-						<Text>Madison square garden</Text>
+			<Link
+				href={{
+					pathname: '/view/details/[id]',
+					params: { id: item.id },
+				}}
+			>
+				<View style={styles.listItem}>
+					<View style={[styles.listItemLeft]}>
+						<View style={[styles.dateBox, { borderColor: primary }]}>
+							<Text style={styles.month}>{month}</Text>
+							<Text style={styles.day}>{day}</Text>
+							<Text style={styles.year}> {year}</Text>
+						</View>
+						<View>
+							<Text style={styles.titleText}>{name}</Text>
+							<Text>Madison square garden</Text>
+						</View>
 					</View>
 				</View>
-			</View>
+			</Link>
 		)
 	}
 
