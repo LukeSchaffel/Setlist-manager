@@ -14,12 +14,14 @@ import { getAuth, initializeAuth, Auth, createUserWithEmailAndPassword } from 'f
 //@ts-ignore
 import { getReactNativePersistence } from '@firebase/auth/dist/rn/index.js'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'
+import { getDatabase } from "firebase/database";
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig)
-const auth = initializeAuth(app, {
+export const auth = initializeAuth(app, {
 	persistence: getReactNativePersistence(ReactNativeAsyncStorage),
 })
+export const db = getDatabase(app)
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -64,22 +66,6 @@ export interface IAppContext {
 }
 
 export const AppContext = createContext<IAppContext>({})
-
-export const handleCreateAccount = (email: string, password: string, callback: (createdUser: any) => any) => {
-	createUserWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-			// Signed up
-			const user = userCredential.user
-			if (user) {
-				callback(user)
-			}
-		})
-		.catch((error) => {
-			const errorCode = error.code
-			const errorMessage = error.message
-			console.log(error)
-		})
-}
 
 function RootLayoutNav() {
 	const colorScheme = useColorScheme()

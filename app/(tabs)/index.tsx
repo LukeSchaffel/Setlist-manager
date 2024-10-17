@@ -1,10 +1,11 @@
-import { Button, StyleSheet } from 'react-native'
+import { Alert, Button, StyleSheet } from 'react-native'
+import dayjs from 'dayjs'
+import { useForm, Controller } from 'react-hook-form'
+import { push, ref, update } from 'firebase/database'
 
-import EditScreenInfo from '@/components/EditScreenInfo'
 import { Text, View } from '@/components/Themed'
 import { Input, DatePickerFormItem } from '@/components'
-import { useForm, Controller } from 'react-hook-form'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import { db, auth } from '../_layout'
 
 export default function TabOneScreen() {
 	const {
@@ -18,8 +19,27 @@ export default function TabOneScreen() {
 		},
 	})
 
-	const onSubmit = (data: any) => {
-		console.log(data)
+	const onSubmit = async (data: any) => {
+		try {
+			if (!auth.currentUser) throw new Error('No user')
+			const newSetlistRef = await push(ref(db, 'setlists'))
+			const newSetlistId = newSetlistRef.key
+
+			const setlistData = {
+				date: dayjs(data.date).format('MM/DD/YYYY'),
+				name: data.name,
+				owner: auth.currentUser.uid,
+			}
+			const updates: any = {}
+			updates[`/setlists/${newSetlistId}`] = setlistData
+			updates[`/users/${auth.currentUser.uid}/setlists/${newSetlistId}`] = true
+
+			await update(ref(db), updates)
+
+			Alert.alert('Successfully created Setlist')
+		} catch (error) {
+			Alert.alert('Something went wrong')
+		}
 	}
 
 	return (
@@ -37,6 +57,7 @@ export default function TabOneScreen() {
 				/>
 				{errors.name && <Text lightColor="red">This is required.</Text>}
 				<DatePickerFormItem control={control} />
+				<Button title="Submit" onPress={handleSubmit(onSubmit)} />
 			</View>
 		</View>
 	)

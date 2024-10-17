@@ -1,11 +1,18 @@
 import React, { useContext, useState } from 'react'
 import { StyleSheet, Button, Alert } from 'react-native'
+import { push, ref, set } from 'firebase/database'
+import { Redirect, router } from 'expo-router'
 
 import { Text, View } from '@/components/Themed'
 import { Input } from '@/components'
-import { AppContext, handleCreateAccount } from '@/app/_layout'
-import { signInWithEmailAndPassword, getAuth, getReactNativePersistence } from 'firebase/auth'
-import { Redirect, router } from 'expo-router'
+import { AppContext, auth, db } from '@/app/_layout'
+import {
+	signInWithEmailAndPassword,
+	getAuth,
+	getReactNativePersistence,
+	User,
+	createUserWithEmailAndPassword,
+} from 'firebase/auth'
 
 const AuthScreen = () => {
 	const [email, setEmail] = useState('')
@@ -13,9 +20,16 @@ const AuthScreen = () => {
 	const { setUser } = useContext(AppContext)
 	const [page, setPage] = useState<'signup' | 'login'>('signup')
 
-	const createAccount = () => {
-		if (email && password) {
-			handleCreateAccount(email, password, (createdUser) => setUser(createdUser))
+	const handleCreateAccount = async () => {
+		try {
+			const response = await createUserWithEmailAndPassword(auth, email, password)
+			const user = response.user
+			set(ref(db, '/users/' + user.uid), {
+				email,
+			})
+			router.replace('/')
+		} catch (error) {
+			Alert.alert('Something went wrong')
 		}
 	}
 
@@ -49,7 +63,7 @@ const AuthScreen = () => {
 			<Input.Password label="Password" value={password} onChangeText={setPassword} />
 			{page === 'signup' ? (
 				<>
-					<Button title="Create account" onPress={createAccount} />
+					<Button title="Create account" onPress={handleCreateAccount} />
 					<Button title="Already have an account?" onPress={() => setPage('login')} />
 				</>
 			) : (
