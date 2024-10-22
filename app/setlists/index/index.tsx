@@ -43,7 +43,7 @@ export default function TabTwoScreen() {
 		return (
 			<Link
 				href={{
-					pathname: '/view/details/[id]',
+					pathname: '/setlists/details/[id]',
 					params: { id: item.id },
 				}}
 			>

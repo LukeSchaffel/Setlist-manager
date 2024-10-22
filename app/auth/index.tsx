@@ -26,7 +26,7 @@ const AuthScreen = () => {
 			set(ref(db, '/users/' + user.uid), {
 				email,
 			})
-			router.replace('/')
+			router.replace('/setlists')
 		} catch (error) {
 			Alert.alert('Something went wrong')
 		}
@@ -40,7 +40,7 @@ const AuthScreen = () => {
 					// Signed int
 					const user = userCredential.user
 					if (user) {
-						router.replace('/')
+						router.replace('/setlists')
 					}
 					// ...
 				})
@@ -51,7 +51,7 @@ const AuthScreen = () => {
 	}
 
 	if (user) {
-		return <Redirect href="/(setlists)" />
+		return <Redirect href="/setlists" />
 	}
 
 	return (

@@ -86,7 +86,7 @@ function RootLayoutNav() {
 		<AppContext.Provider value={{ user }}>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 				<Stack>
-					<Stack.Screen name="(setlists)" options={{ headerShown: false }} />
+					<Stack.Screen name="setlists" options={{ headerShown: false }} />
 					<Stack.Screen name="modal" options={{ presentation: 'modal' }} />
 				</Stack>
 			</ThemeProvider>
