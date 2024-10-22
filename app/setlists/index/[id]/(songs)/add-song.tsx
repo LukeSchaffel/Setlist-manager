@@ -1,7 +1,6 @@
 import { Alert, StyleSheet } from 'react-native'
-import { Stack, useLocalSearchParams } from 'expo-router'
-import { useContext, useEffect, useState } from 'react'
-import { ref, get, push, update } from 'firebase/database'
+import { useContext } from 'react'
+import { ref, push, update } from 'firebase/database'
 import { useForm, Controller } from 'react-hook-form'
 
 import { Text, View, Input, Button } from '@/components'
