@@ -5,7 +5,8 @@ import { push, ref, update } from 'firebase/database'
 
 import { Text, View } from '@/components'
 import { Input, DatePickerFormItem } from '@/components'
-import { db, auth } from '../_layout'
+import { db, auth } from '../../_layout'
+import { router } from 'expo-router'
 
 export default function TabOneScreen() {
 	const {
@@ -36,7 +37,7 @@ export default function TabOneScreen() {
 
 			await update(ref(db), updates)
 
-			Alert.alert('Successfully created Setlist')
+			router.push(`/setlists/create/${newSetlistId}/songs`)
 		} catch (error) {
 			Alert.alert('Something went wrong')
 		}

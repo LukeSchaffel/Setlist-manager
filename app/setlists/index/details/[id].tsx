@@ -1,8 +1,8 @@
-import { Stack, useLocalSearchParams } from 'expo-router'
+import { router, Stack, useLocalSearchParams } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { ref, get } from 'firebase/database'
 
-import { Text } from '@/components'
+import { Text, View, Button } from '@/components'
 import { db } from '@/app/_layout'
 
 const DetailsPage = () => {
@@ -19,9 +19,19 @@ const DetailsPage = () => {
 				setSetlist(null) // Handle case where setlist does not exist
 			}
 		}
-    getSetlist()
+		getSetlist()
 	}, [id])
-	return <Text>{setList?.name}</Text>
+
+	const goToSongsPage = () => {
+		router.push(`/setlists/create/${id}/songs`)
+	}
+
+	return (
+		<View>
+			<Text>{setList?.name}</Text>
+			<Button onPress={goToSongsPage}>Go to songs</Button>
+		</View>
+	)
 }
 
 export default DetailsPage
