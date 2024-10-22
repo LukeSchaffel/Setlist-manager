@@ -1,16 +1,15 @@
 import { Alert, StyleSheet } from 'react-native'
 import { Stack, useLocalSearchParams } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ref, get, push, update } from 'firebase/database'
 import { useForm, Controller } from 'react-hook-form'
 
 import { Text, View, Input, Button } from '@/components'
 import { db } from '@/app/_layout'
+import { SetlistsContext } from '../../_layout'
 
 const SongList = ({}) => {
-	const { id } = useLocalSearchParams()
-	const [setList, setSetlist] = useState<any>({})
-
+	const { selectedSetlist, getSetlist } = useContext(SetlistsContext)
 	const {
 		control,
 		handleSubmit,
@@ -24,29 +23,16 @@ const SongList = ({}) => {
 		},
 	})
 
-	const getSetlist = async () => {
-		const setlistRef = ref(db, '/setlists/' + id)
-		const setlistSnapshot = await get(setlistRef)
-		if (setlistSnapshot.exists()) {
-			setSetlist(setlistSnapshot.val()) // Use .val() to extract the data
-		} else {
-			setSetlist(null) // Handle case where setlist does not exist
-		}
-	}
-	useEffect(() => {
-		getSetlist()
-	}, [id])
-
 	const addSong = async (data: any) => {
 		try {
 			// Check if the setlist exists
-			if (!setList) {
+			if (!selectedSetlist) {
 				Alert.alert('Setlist not found')
 				return
 			}
 
 			// Get the reference to the setlist's songs node
-			const songsRef = ref(db, `/setlists/${id}/songs`)
+			const songsRef = ref(db, `/setlists/${selectedSetlist.id}/songs`)
 
 			// Add a new song entry
 			const newSongRef = await push(songsRef) // Generate a new song ID
@@ -56,12 +42,12 @@ const SongList = ({}) => {
 				title: data.title,
 				artist: data.artist,
 				duration: data.duration,
-				order: Object.keys(setList.songs || {}).length + 1, // Optional: set order based on existing songs
+				order: Object.keys(selectedSetlist.songs || {}).length + 1, // Optional: set order based on existing songs
 			}
 
 			// Create the update object for the new song
 			const updates: any = {}
-			updates[`/setlists/${id}/songs/${newSongId}`] = newSongData
+			updates[`/setlists/${selectedSetlist.id}/songs/${newSongId}`] = newSongData
 
 			// Apply the updates
 			await update(ref(db), updates)
@@ -69,7 +55,7 @@ const SongList = ({}) => {
 			// Success message and reset form
 			Alert.alert('Song added successfully')
 			reset() // Reset form fields
-			getSetlist()
+			getSetlist(selectedSetlist.id)
 		} catch (error) {
 			Alert.alert('SOmething went wrong')
 		}
@@ -113,17 +99,6 @@ const SongList = ({}) => {
 						)}
 						name="duration"
 					/>
-				</View>
-				<View style={styles.info}>
-					<Text bold size={16}>
-						Number of songs: <Text size={20}>{Object.keys(setList.songs || {}).length}</Text>
-					</Text>
-					<Text bold size={16}>
-						Total duration:{' '}
-						<Text size={20}>
-							{Object.values(setList.songs || {}).reduce((a, b: any) => (a + b.duration) as number, 0) as number}
-						</Text>
-					</Text>
 				</View>
 				<View style={styles.buttons}>
 					<Button.Primary onPress={handleSubmit(addSong)}>Add song</Button.Primary>

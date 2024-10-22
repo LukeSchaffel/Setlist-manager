@@ -4,35 +4,18 @@ import dayjs from 'dayjs'
 import { auth, db } from '../../_layout'
 import { Text, View, useThemeColor } from '@/components'
 import { Divider } from '@/components'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { get, onValue, ref } from 'firebase/database'
 import { Link } from 'expo-router'
+import { SetlistsContext } from './_layout'
 
 export default function TabTwoScreen() {
-	const [setlists, setSetlists] = useState<any[]>([])
 	const primary = useThemeColor({}, 'primary')
+	const { getSetlists, setlistsList } = useContext(SetlistsContext)
 
 	useEffect(() => {
-		const getSetlists = async () => {
-			const userSetlistsRef = ref(db, '/users/' + auth.currentUser?.uid + '/setlists')
-			const fetchSetlists = async (snapshot: any) => {
-				if (snapshot.exists()) {
-					const setlistIds = snapshot.val()
-					const setlistPromises = Object.keys(setlistIds).map(async (setlistId) => {
-						const setlistRef = ref(db, `setlists/${setlistId}`)
-						const setlistSnapshot = await get(setlistRef)
-						return { id: setlistId, ...setlistSnapshot.val() }
-					})
-					const setlists = await Promise.all(setlistPromises)
-					setSetlists(setlists)
-				} else {
-					setSetlists([])
-				}
-			}
-			const unsubscribe = onValue(userSetlistsRef, fetchSetlists)
-			return () => unsubscribe()
-		}
-		getSetlists()
+		const unsubscribe = getSetlists()
+		return () => unsubscribe()
 	}, [])
 
 	const renderItem = ({ item }: { item: any }) => {
@@ -69,7 +52,7 @@ export default function TabTwoScreen() {
 			<FlatList
 				contentContainerStyle={styles.list}
 				ItemSeparatorComponent={() => <Divider full />}
-				data={setlists}
+				data={setlistsList}
 				renderItem={renderItem}
 			/>
 		</View>
