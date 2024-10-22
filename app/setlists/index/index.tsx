@@ -43,7 +43,7 @@ export default function TabTwoScreen() {
 		return (
 			<Link
 				href={{
-					pathname: '/setlists/details/[id]',
+					pathname: '/setlists/[id]',
 					params: { id: item.id },
 				}}
 			>
@@ -66,9 +66,12 @@ export default function TabTwoScreen() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>My setlists</Text>
-			<Divider />
-			<FlatList ItemSeparatorComponent={() => <Divider />} data={setlists} renderItem={renderItem} />
+			<FlatList
+				contentContainerStyle={styles.list}
+				ItemSeparatorComponent={() => <Divider full />}
+				data={setlists}
+				renderItem={renderItem}
+			/>
 		</View>
 	)
 }
@@ -76,11 +79,10 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		padding: 16,
 	},
-	title: {
-		fontSize: 20,
-		fontWeight: 'bold',
+	list: {
+		paddingHorizontal: 16,
+		paddingTop: 16,
 	},
 	listItem: {
 		flexDirection: 'row',

@@ -4,8 +4,11 @@ const SetlistsLayout = () => {
 	return (
 		<Stack>
 			<Stack.Screen name="index" options={{ headerShown: false, title: 'My setlists ' }} />
-			<Stack.Screen name="[id]/index" />
-			<Stack.Screen name="[id]/(songs)/add-song" options={{ presentation: 'modal', headerShown: false }} />
+			<Stack.Screen name="[id]/index" options={{ title: '' }} />
+			<Stack.Screen
+				name="[id]/(songs)/add-song"
+				options={{ presentation: 'modal', title: 'Add a song to this setlist' }}
+			/>
 		</Stack>
 	)
 }

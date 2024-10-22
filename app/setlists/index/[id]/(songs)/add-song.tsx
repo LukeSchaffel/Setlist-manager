@@ -78,9 +78,6 @@ const SongList = ({}) => {
 	return (
 		<>
 			<View style={styles.container}>
-				<Text size={20} bold centered>
-					Add to this setlist
-				</Text>
 				<View style={styles.form}>
 					<Controller
 						control={control}
@@ -130,7 +127,6 @@ const SongList = ({}) => {
 				</View>
 				<View style={styles.buttons}>
 					<Button.Primary onPress={handleSubmit(addSong)}>Add song</Button.Primary>
-					<Button.Primary onPress={handleSubmit(addSong)}>View/Reorder songs</Button.Primary>
 				</View>
 			</View>
 		</>
