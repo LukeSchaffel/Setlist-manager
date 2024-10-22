@@ -69,7 +69,7 @@ const SongList = ({}) => {
 			// Success message and reset form
 			Alert.alert('Song added successfully')
 			reset() // Reset form fields
-      getSetlist()
+			getSetlist()
 		} catch (error) {
 			Alert.alert('SOmething went wrong')
 		}
@@ -78,45 +78,60 @@ const SongList = ({}) => {
 	return (
 		<>
 			<View style={styles.container}>
-				<Text size={20} bold>
-					Add songs
+				<Text size={20} bold centered>
+					Add to this setlist
 				</Text>
-				<Controller
-					control={control}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
-					)}
-					name="title"
-					rules={{ required: 'This is required' }}
-				/>
-				<Controller
-					control={control}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
-					)}
-					name="artist"
-				/>
-				<Controller
-					control={control}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<Input
-							label="Duration"
-							value={value.toString()}
-							onChangeText={(dur) => {
-								const val = dur
-								if (!isNaN(parseInt(dur))) {
-									onChange(parseInt(dur))
-								} else {
-									onChange(0)
-								}
-							}}
-							onBlur={onBlur}
-						/>
-					)}
-					name="duration"
-				/>
-				<Button.Primary onPress={handleSubmit(addSong)}> Add song</Button.Primary>
-				<Text>{JSON.stringify(setList.songs)}</Text>
+				<View style={styles.form}>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
+						)}
+						name="title"
+						rules={{ required: 'This is required' }}
+					/>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
+						)}
+						name="artist"
+					/>
+					<Controller
+						control={control}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<Input
+								label="Duration"
+								value={value.toString()}
+								onChangeText={(dur) => {
+									const val = dur
+									if (!isNaN(parseInt(dur))) {
+										onChange(parseInt(dur))
+									} else {
+										onChange(0)
+									}
+								}}
+								onBlur={onBlur}
+							/>
+						)}
+						name="duration"
+					/>
+				</View>
+				<View style={styles.info}>
+					<Text bold size={16}>
+						Number of songs: <Text size={20}>{Object.keys(setList.songs || {}).length}</Text>
+					</Text>
+					<Text bold size={16}>
+						Total duration:{' '}
+						<Text size={20}>
+							{Object.values(setList.songs || {}).reduce((a, b: any) => (a + b.duration) as number, 0) as number}
+						</Text>
+					</Text>
+				</View>
+				<View style={styles.buttons}>
+					<Button.Primary onPress={handleSubmit(addSong)}>Add song</Button.Primary>
+					<Button.Primary onPress={handleSubmit(addSong)}>View/Reorder songs</Button.Primary>
+				</View>
 			</View>
 		</>
 	)
@@ -129,16 +144,19 @@ const styles = StyleSheet.create({
 		padding: 16,
 	},
 	form: {
+		gap: 16,
+		paddingTop: 16,
+	},
+	info: {
 		flex: 1,
+		paddingVertical: 16,
 		gap: 16,
 	},
 	title: {
 		fontSize: 20,
 		fontWeight: 'bold',
 	},
-	separator: {
-		marginVertical: 30,
-		height: 1,
-		width: '80%',
+	buttons: {
+		gap: 16,
 	},
 })

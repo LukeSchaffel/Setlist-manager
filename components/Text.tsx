@@ -8,18 +8,22 @@ interface ITextProps extends TextProps {
 	veryBold?: boolean
 	lightColor?: string
 	darkColor?: string
+	centered?: boolean
 }
 
-const Text = ({ style, size, lightColor, darkColor, primary, bold, ...rest }: ITextProps) => {
+const Text = ({ style, size, lightColor, darkColor, primary, bold, centered, ...rest }: ITextProps) => {
 	const color = useThemeColor({ light: lightColor, dark: darkColor }, primary ? 'primary' : 'text')
-  let fontWeight: TextStyle['fontWeight'] = 400
-  if (bold) {
-    fontWeight =  500
-  }
+	let fontWeight: TextStyle['fontWeight'] = 400
+	let textAlign: TextStyle['textAlign']
+	if (bold) {
+		fontWeight = 500
+	}
 
+	if (centered) {
+		textAlign = 'center'
+	}
 
-	return <DefaultText style={[{ color, fontSize: size, fontWeight }, style]} {...rest} />
+	return <DefaultText style={[{ color, fontSize: size, fontWeight, textAlign }, style]} {...rest} />
 }
-
 
 export default Text
