@@ -2,10 +2,12 @@ import { useContext, useEffect, useState } from 'react'
 import { StyleSheet, FlatList } from 'react-native'
 import { ref, get, update } from 'firebase/database'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
 
 import { Text, View, Button, Divider } from '@/components'
 import { db } from '@/app/_layout'
 import { Setlist, SetlistsContext, Song } from '../_layout'
+import Colors from '@/constants/Colors'
 
 const DetailsPage = () => {
 	const { id } = useLocalSearchParams()
@@ -98,7 +100,7 @@ const DetailsPage = () => {
 				</View>
 				<View style={styles.listItemMain}>
 					<View>
-						<Text size={24} bold>
+						<Text size={24} bold primary veryBold>
 							{title}
 						</Text>
 					</View>
@@ -107,8 +109,12 @@ const DetailsPage = () => {
 					</View>
 				</View>
 				<View style={styles.listItemActions}>
-					<Button onPress={() => moveSongUp(id)}>Up</Button>
-					<Button onPress={() => moveSongDown(id)}>Down</Button>
+					<Button onPress={() => moveSongUp(id)}>
+						<FontAwesome5 name="arrow-up" size={24} color={Colors.light.primary} />
+					</Button>
+					<Button onPress={() => moveSongDown(id)}>
+						<FontAwesome5 name="arrow-down" size={24} color={Colors.light.primary} />
+					</Button>
 				</View>
 			</View>
 		)
@@ -116,8 +122,15 @@ const DetailsPage = () => {
 
 	return (
 		<View style={styles.page}>
-			<FlatList renderItem={renderItem} data={songs} ItemSeparatorComponent={() => <Divider full />} />
-			<Button.Primary onPress={openAddSongModal}>Add songs</Button.Primary>
+			<FlatList
+				renderItem={renderItem}
+				data={songs}
+				ItemSeparatorComponent={() => <Divider full />}
+				contentContainerStyle={styles.list}
+			/>
+			<View style={styles.footer}>
+				<Button.Primary onPress={openAddSongModal}>Add songs</Button.Primary>
+			</View>
 		</View>
 	)
 }
@@ -127,6 +140,8 @@ export default DetailsPage
 const styles = StyleSheet.create({
 	page: {
 		flex: 1,
+	},
+	list: {
 		padding: 16,
 	},
 	listItem: {
@@ -142,5 +157,9 @@ const styles = StyleSheet.create({
 	listItemActions: {
 		flexDirection: 'row',
 		gap: 4,
+	},
+	footer: {
+		paddingHorizontal: 16,
+		paddingVertical: 4,
 	},
 })
