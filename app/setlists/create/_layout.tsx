@@ -1,10 +1,10 @@
 import { Stack } from 'expo-router'
+import { Modal } from 'react-native'
 
 const CreateLayout = () => {
 	return (
 		<Stack>
 			<Stack.Screen name="index" options={{ headerShown: false }} />
-			<Stack.Screen name="[id]/songs" options={{ presentation: 'modal', headerShown: false }} />
 		</Stack>
 	)
 }

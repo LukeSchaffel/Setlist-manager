@@ -23,7 +23,7 @@ const DetailsPage = () => {
 	}, [id])
 
 	const goToSongsPage = () => {
-		router.push(`/setlists/create/${id}/songs`)
+		router.push(`/setlists/${id}/add-song`)
 	}
 
 	return (

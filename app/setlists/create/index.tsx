@@ -37,7 +37,8 @@ export default function TabOneScreen() {
 
 			await update(ref(db), updates)
 
-			router.push(`/setlists/create/${newSetlistId}/songs`)
+			router.replace(`/setlists/${newSetlistId}`)
+			router.push(`/setlists/${newSetlistId}/add-song`)
 		} catch (error) {
 			Alert.alert('Something went wrong')
 		}
