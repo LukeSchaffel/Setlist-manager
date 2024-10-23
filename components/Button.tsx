@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native'
 import { ReactNode } from 'react'
-import { Text, useThemeColor } from '.'
+import { useThemeColor } from '.'
+import Text from './Text'
 
 interface IButtonProps {
 	children?: ReactNode
