@@ -37,6 +37,7 @@ export interface Setlist {
 	name?: string
 	owner: string
 	songs?: Record<string, Song>
+	location?: string
 }
 
 const SetlistsLayout = () => {
@@ -80,7 +81,7 @@ const SetlistsLayout = () => {
 		>
 			<Stack>
 				<Stack.Screen name="index" options={{ headerShown: false, title: 'My setlists ' }} />
-				<Stack.Screen name="[id]/index" options={{ title: selectedSetlist?.name || '' }} />
+				<Stack.Screen name="[id]/index" options={{ headerShown: true, title: '' }} />
 				<Stack.Screen
 					name="[id]/(songs)/add-song"
 					options={{ presentation: 'modal', title: 'Add a song to this setlist' }}

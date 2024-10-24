@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from 'react'
 import { get, onValue, ref } from 'firebase/database'
 import { Link } from 'expo-router'
 import { SetlistsContext } from './_layout'
+import { Setlist } from './_layout'
 
 export default function TabTwoScreen() {
 	const primary = useThemeColor({}, 'primary')
@@ -18,8 +19,8 @@ export default function TabTwoScreen() {
 		return () => unsubscribe()
 	}, [])
 
-	const renderItem = ({ item }: { item: any }) => {
-		const { name, date } = item
+	const renderItem = ({ item }: { item: Setlist }) => {
+		const { name, date, location } = item
 		const month = dayjs(date).format('MMM')
 		const day = dayjs(date).format('DD')
 		const year = dayjs(date).format('YYYY')
@@ -39,7 +40,7 @@ export default function TabTwoScreen() {
 						</View>
 						<View>
 							<Text style={styles.titleText}>{name}</Text>
-							<Text>Madison square garden</Text>
+							<Text>{location}</Text>
 						</View>
 					</View>
 				</View>

@@ -7,21 +7,28 @@ interface IButtonProps {
 	children?: ReactNode
 	fontSize?: number
 	onPress: () => any
+	full?: boolean
 }
 
-const Button = ({ onPress, children }: IButtonProps) => {
+const Button = ({ onPress, full, fontSize, children }: IButtonProps) => {
+	const color = useThemeColor({}, 'primary')
+
 	return (
-		<Pressable onPress={onPress}>
+		<Pressable onPress={onPress} style={{ width: full ? '100%' : 'auto' }}>
 			{({ pressed }) => (
 				<View
 					style={[
 						styles.button,
+						styles.shadow,
 						{
 							transform: pressed ? [{ scale: 0.95 }] : [{ scale: 1 }],
+							backgroundColor: color,
 						},
 					]}
 				>
-					<Text>{children}</Text>
+					<Text bold lightColor="white" darkColor="white" size={fontSize}>
+						{children}
+					</Text>
 				</View>
 			)}
 		</Pressable>
