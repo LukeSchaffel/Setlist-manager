@@ -82,22 +82,14 @@ const DetailsPage = () => {
 			<View style={styles.actions}>
 				<View style={styles.actionRow}>
 					<View style={styles.buttonWrapper}>
-				
-							<Button fontSize={20} full onPress={() => router.push(`/setlists/${selectedSetlist?.id}/song-list`)}>
-								View songs
-							</Button>
+						<Button fontSize={20} full onPress={() => router.push(`/setlists/${selectedSetlist?.id}/song-list`)}>
+							View songs
+						</Button>
 					</View>
 					<View style={styles.buttonWrapper}>
-						<Link
-							href={{
-								pathname: '/setlists/[id]/(songs)/add-song',
-								params: { id: selectedSetlist?.id as string },
-							}}
-						>
-							<Button fontSize={20} full onPress={() => undefined}>
-								View members
-							</Button>
-						</Link>
+						<Button fontSize={20} full onPress={() => undefined}>
+							View members
+						</Button>
 					</View>
 				</View>
 				<View style={styles.actionRow}>
@@ -123,11 +115,13 @@ const styles = StyleSheet.create({
 	page: {
 		flex: 1,
 		padding: 16,
-		justifyContent: 'space-evenly',
+		justifyContent: 'space-between',
 		alignItems: 'center',
 		gap: 16,
 	},
-	details: {},
+	details: {
+		gap: 8,
+	},
 	iconRow: {
 		flexDirection: 'row',
 		gap: 16,

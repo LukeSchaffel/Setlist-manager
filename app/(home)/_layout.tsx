@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Link, Redirect, router, Tabs } from 'expo-router'
-import { Button, Pressable } from 'react-native'
 
+import { Button } from '@/components'
 import Colors from '@/constants/Colors'
 import { useColorScheme } from '@/components/useColorScheme'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
@@ -38,7 +38,7 @@ export default function TabLayout() {
 					title: 'My setlists',
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
 					headerRight: () => (
-						<Button title="Logout" onPress={() => signOut(auth).then(() => router.replace('/auth'))} />
+						<Button.Link onPress={() => signOut(auth).then(() => router.replace('/auth'))}>Logout</Button.Link>
 					),
 				}}
 			/>
