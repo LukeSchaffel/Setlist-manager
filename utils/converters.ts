@@ -12,3 +12,11 @@ export const formatDuration = (seconds: number) => {
 
 	return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`
 }
+
+export const encodeEmail = (email: string) => {
+	return email.replace(/@/g, '-at-').replace(/\./g, '-dot-')
+}
+
+export const decodeEmail = (encodedEmail: string) => {
+	return encodedEmail.replace(/-at-/g, '@').replace(/-dot-/g, '.')
+}

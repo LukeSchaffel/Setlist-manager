@@ -1,7 +1,7 @@
 import { useState, createContext, useEffect, SetStateAction, Dispatch } from 'react'
 
 import { Stack } from 'expo-router'
-import { get, onValue, ref } from 'firebase/database'
+import { get, onValue, ref, Unsubscribe } from 'firebase/database'
 import { auth, db } from '@/app/_layout'
 
 export interface ISetlistsContext {
@@ -10,7 +10,7 @@ export interface ISetlistsContext {
 	setSelectedSetlist: Dispatch<SetStateAction<ISetlistsContext['selectedSetlist']>>
 	setSetlistsList: Dispatch<SetStateAction<ISetlistsContext['setlistsList']>>
 	getSetlists: () => any
-	getSetlist: (id: Setlist['id']) => any
+	watchSetlist: (setlistId: Setlist['id']) => Unsubscribe
 }
 export const SetlistsContext = createContext<ISetlistsContext>({
 	selectedSetlist: null,
@@ -18,7 +18,7 @@ export const SetlistsContext = createContext<ISetlistsContext>({
 	setSelectedSetlist: () => undefined,
 	setSetlistsList: () => undefined,
 	getSetlists: () => undefined,
-	getSetlist: () => undefined,
+	watchSetlist: (setlistId: Setlist['id']) => () => undefined,
 })
 
 //Types in frontend represent post-processed store data.
@@ -38,6 +38,7 @@ export interface Setlist {
 	owner: string
 	songs?: Record<string, Song>
 	location?: string
+	sharedWith?: Record<string, { role: string }>
 }
 
 const SetlistsLayout = () => {
@@ -64,20 +65,23 @@ const SetlistsLayout = () => {
 		return unsubscribe
 	}
 
-	const getSetlist = async (setlistId: Setlist['id']) => {
+	const watchSetlist = (setlistId: Setlist['id']) => {
 		const setlistRef = ref(db, '/setlists/' + setlistId)
-		const setlistSnapshot = await get(setlistRef)
-		if (setlistSnapshot.exists()) {
-			const setListVal = setlistSnapshot.val()
-			setSelectedSetlist({ id: setlistId, ...setListVal })
-		} else {
-			setSelectedSetlist(null)
-		}
+		const unsubscribe = onValue(setlistRef, (snapshot) => {
+			if (snapshot.exists()) {
+				const setListVal = snapshot.val()
+				setSelectedSetlist({ id: setlistId, ...setListVal })
+			} else {
+				setSelectedSetlist(null) // Handle case where the setlist doesn't exist
+			}
+		})
+
+		return unsubscribe
 	}
 
 	return (
 		<SetlistsContext.Provider
-			value={{ selectedSetlist, setSelectedSetlist, setlistsList, setSetlistsList, getSetlists, getSetlist }}
+			value={{ selectedSetlist, setSelectedSetlist, setlistsList, setSetlistsList, getSetlists, watchSetlist }}
 		>
 			<Stack>
 				<Stack.Screen name="index" options={{ headerShown: false, title: 'My setlists ' }} />

@@ -11,7 +11,7 @@ import Colors from '@/constants/Colors'
 
 const SongListPage = () => {
 	const { id } = useLocalSearchParams()
-	const { getSetlist, selectedSetlist, setSelectedSetlist } = useContext(SetlistsContext)
+	const { selectedSetlist, setSelectedSetlist } = useContext(SetlistsContext)
 	const navigation = useNavigation()
 
 	const songs: Song[] = (
@@ -22,10 +22,6 @@ const SongListPage = () => {
 			  }))
 			: []
 	).sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
-
-	useEffect(() => {
-		getSetlist(id as Setlist['id'])
-	}, [id])
 
 	if (!selectedSetlist) return <></>
 
@@ -59,7 +55,6 @@ const SongListPage = () => {
 			updates[`/setlists/${id}/songs/${upperSongId}/order`] = currentOrder // Move upper song down
 
 			await update(ref(db), updates) // Update the Firebase database
-			await getSetlist(id as Setlist['id']) // Refresh the setlist after update
 		}
 	}
 
@@ -88,7 +83,6 @@ const SongListPage = () => {
 			updates[`/setlists/${id}/songs/${lowerSongId}/order`] = currentOrder // Move lower song up
 
 			await update(ref(db), updates) // Update the Firebase database
-			await getSetlist(id as Setlist['id']) // Refresh the setlist after update
 		}
 	}
 

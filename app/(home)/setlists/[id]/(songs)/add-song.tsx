@@ -8,7 +8,7 @@ import { db } from '@/app/_layout'
 import { SetlistsContext } from '../../_layout'
 
 const SongList = ({}) => {
-	const { selectedSetlist, getSetlist } = useContext(SetlistsContext)
+	const { selectedSetlist } = useContext(SetlistsContext)
 	const {
 		control,
 		handleSubmit,
@@ -54,7 +54,6 @@ const SongList = ({}) => {
 			// Success message and reset form
 			Alert.alert('Song added successfully')
 			reset() // Reset form fields
-			getSetlist(selectedSetlist.id)
 		} catch (error) {
 			Alert.alert('SOmething went wrong')
 		}

@@ -14,12 +14,14 @@ import Colors from '@/constants/Colors'
 
 const DetailsPage = () => {
 	const { id } = useLocalSearchParams()
-	const { getSetlist, selectedSetlist, setSelectedSetlist } = useContext(SetlistsContext)
+	const { watchSetlist, selectedSetlist, setSelectedSetlist } = useContext(SetlistsContext)
 
 	const navigation = useNavigation()
 
 	useEffect(() => {
-		getSetlist(id as Setlist['id'])
+		const unsubscribe = watchSetlist(id as Setlist['id'])
+
+		return () => unsubscribe()
 	}, [id])
 
 	useEffect(() => {
@@ -73,7 +75,8 @@ const DetailsPage = () => {
 				<View style={styles.iconRow}>
 					<FontAwesome6 name="people-group" size={24} color={Colors.light.primary} />
 					<Text size={24} style={{ verticalAlign: 'middle' }}>
-						Shared with {0} people
+						Shared with {selectedSetlist?.sharedWith ? (Object.values(selectedSetlist.sharedWith).length as number) : 0}{' '}
+						user(s)
 					</Text>
 				</View>
 			</View>
@@ -87,7 +90,7 @@ const DetailsPage = () => {
 						</Button>
 					</View>
 					<View style={styles.buttonWrapper}>
-						<Button fontSize={20} full onPress={() => undefined}>
+						<Button fontSize={20} full onPress={() => router.push(`/setlists/${selectedSetlist?.id}/member-list`)}>
 							View members
 						</Button>
 					</View>
