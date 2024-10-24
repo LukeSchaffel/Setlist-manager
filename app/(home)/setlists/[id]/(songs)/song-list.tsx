@@ -27,15 +27,6 @@ const SongListPage = () => {
 		getSetlist(id as Setlist['id'])
 	}, [id])
 
-	useEffect(() => {
-		const unsubscribe = navigation.addListener('beforeRemove', () => {
-			// Call your function here when leaving the screen
-			setSelectedSetlist(null)
-		})
-
-		return unsubscribe // Clean up the listener when the component unmounts
-	}, [navigation])
-
 	if (!selectedSetlist) return <></>
 
 	const openAddSongModal = () => {
@@ -119,12 +110,12 @@ const SongListPage = () => {
 					</View>
 				</View>
 				<View style={styles.listItemActions}>
-					<Button onPress={() => moveSongUp(id)}>
+					<Button.Link onPress={() => moveSongUp(id)}>
 						<FontAwesome5 name="arrow-up" size={24} color={Colors.light.primary} />
-					</Button>
-					<Button onPress={() => moveSongDown(id)}>
+					</Button.Link>
+					<Button.Link onPress={() => moveSongDown(id)}>
 						<FontAwesome5 name="arrow-down" size={24} color={Colors.light.primary} />
-					</Button>
+					</Button.Link>
 				</View>
 			</View>
 		)

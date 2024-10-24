@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { StyleSheet, FlatList } from 'react-native'
 import { ref, get, update } from 'firebase/database'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { Link, router, useLocalSearchParams, useNavigation } from 'expo-router'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import dayjs from 'dayjs'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
@@ -82,14 +82,22 @@ const DetailsPage = () => {
 			<View style={styles.actions}>
 				<View style={styles.actionRow}>
 					<View style={styles.buttonWrapper}>
-						<Button fontSize={20} full onPress={() => undefined}>
-							View songs
-						</Button>
+				
+							<Button fontSize={20} full onPress={() => router.push(`/setlists/${selectedSetlist?.id}/song-list`)}>
+								View songs
+							</Button>
 					</View>
 					<View style={styles.buttonWrapper}>
-						<Button fontSize={20} full onPress={() => undefined}>
-							View members
-						</Button>
+						<Link
+							href={{
+								pathname: '/setlists/[id]/(songs)/add-song',
+								params: { id: selectedSetlist?.id as string },
+							}}
+						>
+							<Button fontSize={20} full onPress={() => undefined}>
+								View members
+							</Button>
+						</Link>
 					</View>
 				</View>
 				<View style={styles.actionRow}>

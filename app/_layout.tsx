@@ -86,8 +86,7 @@ function RootLayoutNav() {
 		<AppContext.Provider value={{ user }}>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
 				<Stack>
-					<Stack.Screen name="setlists" options={{ headerShown: false }} />
-					<Stack.Screen name="index" options={{ headerShown: false }} />
+					<Stack.Screen name="(home)" options={{ headerShown: false }} />
 				</Stack>
 			</ThemeProvider>
 		</AppContext.Provider>

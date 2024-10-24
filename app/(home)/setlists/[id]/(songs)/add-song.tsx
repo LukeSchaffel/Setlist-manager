@@ -75,7 +75,7 @@ const SongList = ({}) => {
 					<Controller
 						control={control}
 						render={({ field: { onChange, onBlur, value } }) => (
-							<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
+							<Input label="Artist" value={value} onChangeText={onChange} onBlur={onBlur} />
 						)}
 						name="artist"
 					/>
