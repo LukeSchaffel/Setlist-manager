@@ -5,7 +5,7 @@ import { useForm, Controller } from 'react-hook-form'
 
 import { encodeEmail } from '@/utils'
 import { Text, View, Input, Button } from '@/components'
-import { db } from '@/app/_layout'
+import { auth, db } from '@/app/_layout'
 import { SetlistsContext } from '../../_layout'
 
 const AddMember = ({}) => {
@@ -29,11 +29,22 @@ const AddMember = ({}) => {
 				Alert.alert('Setlist not found')
 				return
 			}
-			const encodedEmail = encodeEmail(data.email)
-			await set(ref(db, `/setlists/${selectedSetlist.id}/sharedWith/` + encodedEmail), {
+			if (!auth.currentUser) {
+				console.log('Unauthorized')
+				return
+			}
+			const sharesRef = ref(db, '/shares')
+			const newShare = await push(sharesRef, {
 				role: data.role,
 				name: data.name,
+				email: data.email,
+				setlist: selectedSetlist.id,
+				sentBy: auth.currentUser.uid,
+				status: 'pending',
 			})
+			const updates: any = {}
+			updates[`/setlists/${selectedSetlist.id}/shares/${newShare.key}`] = true
+			await update(ref(db), updates)
 		} catch (error) {
 			console.log(error)
 		}
