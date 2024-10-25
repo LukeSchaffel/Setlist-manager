@@ -36,7 +36,7 @@ export interface Setlist {
 	date?: string
 	name?: string
 	owner: string
-	songs?: Record<string, Song>
+	songs?: Song[]
 	location?: string
 	sharedWith?: Record<string, { role: string }>
 }
@@ -67,10 +67,20 @@ const SetlistsLayout = () => {
 
 	const watchSetlist = (setlistId: Setlist['id']) => {
 		const setlistRef = ref(db, '/setlists/' + setlistId)
-		const unsubscribe = onValue(setlistRef, (snapshot) => {
+		const unsubscribe = onValue(setlistRef, async (snapshot) => {
 			if (snapshot.exists()) {
 				const setListVal = snapshot.val()
-				setSelectedSetlist({ id: setlistId, ...setListVal })
+				const songIds = Object.keys(setListVal.songs || {})
+
+				// Fetch each song's details based on its ID
+				const songPromises = songIds.map(async (songId) => {
+					const songRef = ref(db, '/songs/' + songId)
+					const songSnapshot = await get(songRef)
+					return songSnapshot.exists() ? { id: songId, ...songSnapshot.val() } : null
+				})
+
+				const songs = (await Promise.all(songPromises)).filter(Boolean) // Remove any nulls
+				setSelectedSetlist({ id: setlistId, ...setListVal, songs })
 			} else {
 				setSelectedSetlist(null) // Handle case where the setlist doesn't exist
 			}

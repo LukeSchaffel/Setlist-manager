@@ -34,25 +34,26 @@ const SongListPage = () => {
 			return // Exit if selectedSetlist or songs are not defined
 		}
 
-		const song = selectedSetlist.songs[songId]
+		const song = selectedSetlist.songs.find((song) => songId === song.id)
 
 		if (!song || song.order <= 1) return // Do not move if already at the top
 
 		const currentOrder = song.order
 
 		// Find the entry of the song directly above the current song
-		const upperSongIdEntry = Object.entries(selectedSetlist.songs).find(([_, s]) => {
-			return s.order === currentOrder - 1 // Return true if the order matches
+		const upperSongIdEntry = selectedSetlist.songs.find((song) => {
+			return song.order === currentOrder - 1 // Return true if the order matches
 		})
 
 		// Check if an upper song was found
 		if (upperSongIdEntry) {
-			const upperSongId = upperSongIdEntry[0] // Get the ID of the upper song
+			const upperSongId = upperSongIdEntry.id // Get the ID of the upper song
 
 			// Prepare updates for the Firebase database
 			const updates: any = {}
-			updates[`/setlists/${id}/songs/${songId}/order`] = currentOrder - 1 // Move current song up
-			updates[`/setlists/${id}/songs/${upperSongId}/order`] = currentOrder // Move upper song down
+			updates[`/songs/${songId}/order`] = currentOrder - 1 // Move current song up in songs node
+			updates[`/songs/${upperSongId}/order`] = currentOrder // Move upper song down in songs node
+			updates[`/setlists/${selectedSetlist.id}/updatedAt`] = Date.now() // Update the timestamp in the setlist
 
 			await update(ref(db), updates) // Update the Firebase database
 		}
@@ -63,24 +64,25 @@ const SongListPage = () => {
 			return // Exit if selectedSetlist or songs are not defined
 		}
 
-		const song = selectedSetlist.songs[songId]
+		const song = selectedSetlist.songs.find((song) => songId === song.id)
 		if (!song) return // Do not move if song does not exist
 
 		const currentOrder = song.order
 
 		// Find the entry of the song directly below the current song
-		const lowerSongIdEntry = Object.entries(selectedSetlist.songs).find(([_, s]) => {
+		const lowerSongIdEntry = selectedSetlist.songs.find((s) => {
 			return s.order === currentOrder + 1 // Return true if the order matches
 		})
 
 		// Check if a lower song was found
 		if (lowerSongIdEntry) {
-			const lowerSongId = lowerSongIdEntry[0] // Get the ID of the lower song
+			const lowerSongId = lowerSongIdEntry.id // Get the ID of the lower song
 
 			// Prepare updates for the Firebase database
 			const updates: any = {}
-			updates[`/setlists/${id}/songs/${songId}/order`] = currentOrder + 1 // Move current song down
-			updates[`/setlists/${id}/songs/${lowerSongId}/order`] = currentOrder // Move lower song up
+			updates[`/songs/${songId}/order`] = currentOrder + 1 // Move current song down
+			updates[`/songs/${lowerSongId}/order`] = currentOrder // Move lower song up
+			updates[`/setlists/${selectedSetlist.id}/updatedAt`] = Date.now() // Update the timestamp in the setlist
 
 			await update(ref(db), updates) // Update the Firebase database
 		}

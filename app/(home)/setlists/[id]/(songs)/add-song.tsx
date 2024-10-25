@@ -30,23 +30,28 @@ const SongList = ({}) => {
 				return
 			}
 
-			// Get the reference to the setlist's songs node
-			const songsRef = ref(db, `/setlists/${selectedSetlist.id}/songs`)
+			const { id: setlistId } = selectedSetlist
 
 			// Add a new song entry
-			const newSongRef = await push(songsRef) // Generate a new song ID
-			const newSongId = newSongRef.key
+			const newSong = await push(ref(db, `/songs`)) // Generate a new song ID
+			const newSongId = newSong.key
+
+			if (!newSongId) {
+				return
+			}
 
 			const newSongData = {
 				title: data.title,
 				artist: data.artist,
 				duration: data.duration,
-				order: Object.keys(selectedSetlist.songs || {}).length + 1, // Optional: set order based on existing songs
+				order: Object.keys(selectedSetlist.songs || {}).length + 1,
+				setlist: setlistId,
 			}
 
 			// Create the update object for the new song
 			const updates: any = {}
-			updates[`/setlists/${selectedSetlist.id}/songs/${newSongId}`] = newSongData
+			updates[`/setlists/${setlistId}/songs/${newSongId}`] = true
+			updates[`/songs/${newSongId}`] = newSongData
 
 			// Apply the updates
 			await update(ref(db), updates)
