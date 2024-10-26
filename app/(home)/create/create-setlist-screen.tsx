@@ -1,12 +1,12 @@
-import { Alert, Button, StyleSheet } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import dayjs from 'dayjs'
 import { useForm, Controller } from 'react-hook-form'
 import { push, ref, update } from 'firebase/database'
+import { Link, router } from 'expo-router'
 
 import { Text, View } from '@/components'
-import { Input, DatePickerFormItem } from '@/components'
+import { Input, DatePickerFormItem, Button } from '@/components'
 import { db, auth } from '../../_layout'
-import { Link, router } from 'expo-router'
 
 export default function CreateSetlistScreen() {
 	const {
@@ -33,7 +33,7 @@ export default function CreateSetlistScreen() {
 				owner: auth.currentUser.uid,
 				location: data.location,
 			}
-      
+
 			const updates: any = {}
 			updates[`/setlists/${newSetlistId}`] = setlistData
 			updates[`/users/${auth.currentUser.uid}/setlists/${newSetlistId}`] = true
@@ -58,7 +58,7 @@ export default function CreateSetlistScreen() {
 						<Input label="Name" value={value} onChangeText={onChange} onBlur={onBlur} />
 					)}
 					name="name"
-					rules={{ required: 'This is required' }}
+					rules={{ required: 'Name is required' }}
 				/>
 				<Controller
 					control={control}
@@ -66,11 +66,11 @@ export default function CreateSetlistScreen() {
 						<Input label="Location" value={value} onChangeText={onChange} onBlur={onBlur} />
 					)}
 					name="location"
-					rules={{ required: 'This is required' }}
+					rules={{ required: 'Location is required' }}
 				/>
 				{errors.name && <Text lightColor="red">This is required.</Text>}
 				<DatePickerFormItem control={control} />
-				<Button title="Submit" onPress={handleSubmit(onSubmit)} />
+				<Button.Primary onPress={handleSubmit(onSubmit)}>Submit</Button.Primary>
 			</View>
 		</View>
 	)
