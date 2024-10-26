@@ -8,11 +8,13 @@ interface IButtonProps {
 	fontSize?: number
 	onPress: () => any
 	full?: boolean
+	ghost?: boolean
 }
 
-const Button = ({ onPress, full, fontSize, children }: IButtonProps) => {
+const Button = ({ onPress, full, fontSize, children, ghost }: IButtonProps) => {
 	const color = useThemeColor({}, 'primary')
-
+	const backgroundColor = useThemeColor({}, 'background')
+	const fontColor = ghost ? color : 'white'
 	return (
 		<Pressable onPress={onPress} style={{ width: full ? '100%' : 'auto' }}>
 			{({ pressed }) => (
@@ -22,11 +24,11 @@ const Button = ({ onPress, full, fontSize, children }: IButtonProps) => {
 						styles.shadow,
 						{
 							transform: pressed ? [{ scale: 0.95 }] : [{ scale: 1 }],
-							backgroundColor: color,
+							backgroundColor: ghost ? backgroundColor : color,
 						},
 					]}
 				>
-					<Text bold lightColor="white" darkColor="white" size={fontSize}>
+					<Text bold lightColor={fontColor} darkColor={fontColor} size={fontSize}>
 						{children}
 					</Text>
 				</View>

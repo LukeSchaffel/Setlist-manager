@@ -1,8 +1,8 @@
 import { StyleSheet, FlatList } from 'react-native'
 import dayjs from 'dayjs'
 
-import { auth, db } from '../../_layout'
-import { Text, View, useThemeColor } from '@/components'
+import { AppContext, auth, db } from '../../_layout'
+import { Button, Text, View, useThemeColor } from '@/components'
 import { Divider } from '@/components'
 import { useContext, useEffect, useState } from 'react'
 import { get, onValue, ref } from 'firebase/database'
@@ -13,6 +13,8 @@ import { Setlist } from './_layout'
 export default function TabTwoScreen() {
 	const primary = useThemeColor({}, 'primary')
 	const { getSetlists, setlistsList } = useContext(SetlistsContext)
+	const [filter, setFilter] = useState<'owned' | 'shared'>('owned')
+	const { user } = useContext(AppContext)
 
 	useEffect(() => {
 		const unsubscribe = getSetlists()
@@ -48,13 +50,36 @@ export default function TabTwoScreen() {
 		)
 	}
 
+	const listHeader = (
+		<View style={styles.header}>
+			<View style={{ flex: 1 }}>
+				<Button onPress={() => setFilter('owned')} full ghost={filter === 'shared'} fontSize={16}>
+					My setlists
+				</Button>
+			</View>
+			<View style={{ flex: 1 }}>
+				<Button onPress={() => setFilter('shared')} full ghost={filter === 'owned'} fontSize={16}>
+					Shared With me
+				</Button>
+			</View>
+		</View>
+	)
+
 	return (
 		<View style={styles.container}>
 			<FlatList
 				contentContainerStyle={styles.list}
 				ItemSeparatorComponent={() => <Divider full />}
-				data={setlistsList}
+				data={setlistsList.filter((setlist) => {
+					const isOwned = setlist.owner === user.uid
+					if (filter === 'owned') {
+						return isOwned
+					} else {
+						return !isOwned
+					}
+				})}
 				renderItem={renderItem}
+				ListHeaderComponent={listHeader}
 			/>
 		</View>
 	)
@@ -67,6 +92,11 @@ const styles = StyleSheet.create({
 	list: {
 		paddingHorizontal: 16,
 		paddingTop: 16,
+	},
+	header: {
+		flexDirection: 'row',
+		gap: 4,
+		marginBottom: 8,
 	},
 	listItem: {
 		flexDirection: 'row',
