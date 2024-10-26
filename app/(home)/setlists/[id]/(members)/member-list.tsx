@@ -20,23 +20,26 @@ const SongListPage = () => {
 		router.push(`/setlists/${id}/add-member`)
 	}
 
-	const members: any = selectedSetlist?.sharedWith
-		? Object.entries(selectedSetlist.sharedWith).map(([email, rest]) => ({ email, ...rest }))
-		: []
-
 	const renderItem = ({ item }: { item: any }) => {
-		const { email, role, name } = item
+		const { email, role, name, status } = item
+		const statusColor = { pending: 'orange', declined: 'red', accepted: 'green'  }[status as string]
 		return (
 			<View style={styles.listItem}>
 				<View style={styles.listItemMain}>
 					<View>
 						<Text size={24} bold primary veryBold>
-							{name} - {role}
+							{name}
 						</Text>
 					</View>
 					<View>
-						<Text size={16}>{email}</Text>
+						<Text size={16}>
+							{email}
+							<Text size={14}> - {role}</Text>
+						</Text>
 					</View>
+				</View>
+				<View>
+					<Text lightColor={statusColor}>{status}</Text>
 				</View>
 			</View>
 		)
@@ -46,7 +49,7 @@ const SongListPage = () => {
 		<View style={styles.page}>
 			<FlatList
 				renderItem={renderItem}
-				data={members}
+				data={selectedSetlist.shares}
 				ItemSeparatorComponent={() => <Divider full />}
 				contentContainerStyle={styles.list}
 			/>

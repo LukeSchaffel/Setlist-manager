@@ -31,6 +31,16 @@ export interface Song {
 	duration: number
 }
 
+export interface Share {
+	id: string
+	name?: string
+	email: string
+	role?: string
+	sentBy: string
+	setlist: string
+	status: 'pending' | 'declined' | 'accepted'
+}
+
 export interface Setlist {
 	id: string
 	date?: string
@@ -38,7 +48,7 @@ export interface Setlist {
 	owner: string
 	songs?: Song[]
 	location?: string
-	sharedWith?: Record<string, { role: string }>
+	shares?: Share[]
 }
 
 const SetlistsLayout = () => {
@@ -71,7 +81,7 @@ const SetlistsLayout = () => {
 			if (snapshot.exists()) {
 				const setListVal = snapshot.val()
 				const songIds = Object.keys(setListVal.songs || {})
-
+				const sharesIds = Object.keys(setListVal.shares || {})
 				// Fetch each song's details based on its ID
 				const songPromises = songIds.map(async (songId) => {
 					const songRef = ref(db, '/songs/' + songId)
@@ -79,8 +89,16 @@ const SetlistsLayout = () => {
 					return songSnapshot.exists() ? { id: songId, ...songSnapshot.val() } : null
 				})
 
+				const sharesPromises = sharesIds.map(async (shareId) => {
+					const shareRef = ref(db, '/shares/' + shareId)
+					const shareSnapshot = await get(shareRef)
+					return shareSnapshot.exists() ? { id: shareId, ...shareSnapshot.val() } : null
+				})
+
 				const songs = (await Promise.all(songPromises)).filter(Boolean) // Remove any nulls
-				setSelectedSetlist({ id: setlistId, ...setListVal, songs })
+				const shares = (await Promise.all(sharesPromises)).filter(Boolean)
+
+				setSelectedSetlist({ id: setlistId, ...setListVal, songs, shares })
 			} else {
 				setSelectedSetlist(null) // Handle case where the setlist doesn't exist
 			}
@@ -101,6 +119,7 @@ const SetlistsLayout = () => {
 					name="[id]/(songs)/add-song"
 					options={{ presentation: 'modal', title: 'Add a song to this setlist' }}
 				/>
+				<Stack.Screen name="[id]/(members)/member-list" options={{ title: 'Members' }} />
 			</Stack>
 		</SetlistsContext.Provider>
 	)

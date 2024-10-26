@@ -79,7 +79,7 @@ const AddMember = ({}) => {
 					/>
 				</View>
 				<View style={styles.buttons}>
-					<Button.Primary onPress={handleSubmit(addMember)}>Add song</Button.Primary>
+					<Button.Primary onPress={handleSubmit(addMember)}>Add member</Button.Primary>
 				</View>
 			</View>
 		</>

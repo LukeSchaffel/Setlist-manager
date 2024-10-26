@@ -75,7 +75,7 @@ const DetailsPage = () => {
 				<View style={styles.iconRow}>
 					<FontAwesome6 name="people-group" size={24} color={Colors.light.primary} />
 					<Text size={24} style={{ verticalAlign: 'middle' }}>
-						Shared with {selectedSetlist?.sharedWith ? (Object.values(selectedSetlist.sharedWith).length as number) : 0}{' '}
+						Shared with {selectedSetlist?.shares ? (Object.values(selectedSetlist.shares).length as number) : 0}{' '}
 						user(s)
 					</Text>
 				</View>
