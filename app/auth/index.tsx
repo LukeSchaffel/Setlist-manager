@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, Alert } from 'react-native'
 import { push, ref, set } from 'firebase/database'
 import { Redirect, router } from 'expo-router'
+import { TextInput, Button } from 'react-native-paper'
 
-import { Text, View, Button, Input, Divider } from '@/components'
+import { Text, View, Divider } from '@/components'
 import { AppContext, auth, db } from '@/app/_layout'
 import {
 	signInWithEmailAndPassword,
@@ -18,6 +19,7 @@ const AuthScreen = () => {
 	const [password, setPassword] = useState('')
 	const { user } = useContext(AppContext)
 	const [page, setPage] = useState<'signup' | 'login'>('login')
+	const [showPassword, setShowPassword] = useState(false)
 
 	const handleCreateAccount = async () => {
 		try {
@@ -61,19 +63,30 @@ const AuthScreen = () => {
 				<Divider full />
 			</View>
 			<View>
-				<Input label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
-				<Input.Password label="Password" value={password} onChangeText={setPassword} />
+				<TextInput mode="outlined" label="Email" value={email} onChangeText={setEmail} keyboardType="email-address" />
+				<TextInput
+					mode="outlined"
+					label="Password"
+					value={password}
+					onChangeText={setPassword}
+					secureTextEntry={!showPassword}
+					right={<TextInput.Icon icon="eye" onPress={() => setShowPassword(!showPassword)} />}
+				/>
 			</View>
 			<View>
 				{page === 'signup' ? (
 					<>
-						<Button.Primary onPress={handleCreateAccount}>Create account</Button.Primary>
+						<Button mode="contained" onPress={handleCreateAccount}>
+							Create account
+						</Button>
 						<Button onPress={() => setPage('login')}>Already have an account?</Button>
 					</>
 				) : (
 					<>
-						<Button.Primary onPress={login}>Login</Button.Primary>
-						<Button.Link onPress={() => setPage('signup')}>Create account</Button.Link>
+						<Button mode="contained" onPress={login}>
+							Login
+						</Button>
+						<Button onPress={() => setPage('signup')}>Create account</Button>
 					</>
 				)}
 			</View>

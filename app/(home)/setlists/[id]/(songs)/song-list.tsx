@@ -3,8 +3,9 @@ import { StyleSheet, FlatList } from 'react-native'
 import { ref, get, update } from 'firebase/database'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
+import { List, Button } from 'react-native-paper'
 
-import { Text, View, Button, Divider } from '@/components'
+import { Text, View, Divider } from '@/components'
 import { db } from '@/app/_layout'
 import { Setlist, SetlistsContext, Song } from '../../_layout'
 import Colors from '@/constants/Colors'
@@ -91,29 +92,29 @@ const SongListPage = () => {
 	const renderItem = ({ item }: { item: Song }) => {
 		const { artist, duration, order, title, id } = item
 		return (
-			<View style={styles.listItem}>
-				<View>
-					<Text size={24}>{order}</Text>
-				</View>
-				<View style={styles.listItemMain}>
-					<View>
-						<Text size={24} bold primary veryBold>
-							{title}
+			<List.Item
+				left={() => (
+					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+						<Text bold size={20}>
+							{order} .
 						</Text>
 					</View>
-					<View>
-						<Text size={16}>{artist}</Text>
+				)}
+				title={title}
+				titleStyle={{ fontSize: 20 }}
+				description={artist + ' ' + ' - ' + duration}
+				right={() => (
+					<View style={styles.listItemActions}>
+						<Button mode="text" onPress={() => moveSongUp(id)}>
+							<FontAwesome5 name="arrow-up" size={24} color={Colors.light.primary} />
+						</Button>
+						<Button mode="text" onPress={() => moveSongDown(id)}>
+							<FontAwesome5 name="arrow-down" size={24} color={Colors.light.primary} />
+						</Button>
 					</View>
-				</View>
-				<View style={styles.listItemActions}>
-					<Button.Link onPress={() => moveSongUp(id)}>
-						<FontAwesome5 name="arrow-up" size={24} color={Colors.light.primary} />
-					</Button.Link>
-					<Button.Link onPress={() => moveSongDown(id)}>
-						<FontAwesome5 name="arrow-down" size={24} color={Colors.light.primary} />
-					</Button.Link>
-				</View>
-			</View>
+				)}
+				style={{ paddingRight: 0 }}
+			/>
 		)
 	}
 
@@ -122,11 +123,13 @@ const SongListPage = () => {
 			<FlatList
 				renderItem={renderItem}
 				data={songs}
-				ItemSeparatorComponent={() => <Divider full />}
+				// ItemSeparatorComponent={() => <Divider full />}
 				contentContainerStyle={styles.list}
 			/>
 			<View style={styles.footer}>
-				<Button.Primary onPress={openAddSongModal}>Add songs</Button.Primary>
+				<Button mode="contained" onPress={openAddSongModal}>
+					Add songs
+				</Button>
 			</View>
 		</View>
 	)
@@ -141,19 +144,8 @@ const styles = StyleSheet.create({
 	list: {
 		padding: 16,
 	},
-	listItem: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		gap: 16,
-	},
-	listItemAvatar: {},
-	listItemMain: {
-		flexDirection: 'column',
-		flex: 1,
-	},
 	listItemActions: {
 		flexDirection: 'row',
-		gap: 4,
 	},
 	footer: {
 		paddingHorizontal: 16,

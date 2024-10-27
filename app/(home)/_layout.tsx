@@ -38,7 +38,7 @@ export default function TabLayout() {
 					title: 'My setlists',
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
 					headerRight: () => (
-						<Button.Link onPress={() => signOut(auth).then(() => router.replace('/auth'))}>Logout</Button.Link>
+						<Button.Link onPress={() => signOut(auth)}>Logout</Button.Link>
 					),
 				}}
 			/>

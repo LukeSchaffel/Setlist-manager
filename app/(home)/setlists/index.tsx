@@ -3,10 +3,11 @@ import dayjs from 'dayjs'
 
 import { AppContext, auth, db } from '../../_layout'
 import { Button, Text, View, useThemeColor } from '@/components'
+import { SegmentedButtons, List } from 'react-native-paper'
 import { Divider } from '@/components'
 import { useContext, useEffect, useState } from 'react'
 import { get, onValue, ref } from 'firebase/database'
-import { Link } from 'expo-router'
+import { Link, router } from 'expo-router'
 import { SetlistsContext } from './_layout'
 import { Setlist } from './_layout'
 
@@ -18,7 +19,6 @@ export default function TabTwoScreen() {
 
 	useEffect(() => {
 		const unsubscribe = getSetlists()
-		return () => unsubscribe()
 	}, [])
 
 	const renderItem = ({ item }: { item: Setlist }) => {
@@ -27,49 +27,45 @@ export default function TabTwoScreen() {
 		const day = dayjs(date).format('DD')
 		const year = dayjs(date).format('YYYY')
 		return (
-			<Link
-				href={{
-					pathname: '/setlists/[id]',
-					params: { id: item.id },
-				}}
-			>
-				<View style={styles.listItem}>
-					<View style={[styles.listItemLeft]}>
-						<View style={[styles.dateBox, { borderColor: primary }]}>
-							<Text style={styles.month}>{month}</Text>
-							<Text style={styles.day}>{day}</Text>
-							<Text style={styles.year}> {year}</Text>
-						</View>
-						<View>
-							<Text style={styles.titleText}>{name}</Text>
-							<Text>{location}</Text>
-						</View>
+			<List.Item
+				title={name}
+				titleStyle={{ fontSize: 20 }}
+				left={() => (
+					<View style={[styles.dateBox, { borderColor: primary }]}>
+						<Text style={styles.month}>{month}</Text>
+						<Text style={styles.day}>{day}</Text>
+						<Text style={styles.year}> {year}</Text>
 					</View>
-				</View>
-			</Link>
+				)}
+				description={location}
+				onPress={() => router.push(`/setlists/${item.id}`)}
+			/>
 		)
 	}
 
 	const listHeader = (
-		<View style={styles.header}>
-			<View style={{ flex: 1 }}>
-				<Button onPress={() => setFilter('owned')} full ghost={filter === 'shared'} fontSize={16}>
-					My setlists
-				</Button>
-			</View>
-			<View style={{ flex: 1 }}>
-				<Button onPress={() => setFilter('shared')} full ghost={filter === 'owned'} fontSize={16}>
-					Shared With me
-				</Button>
-			</View>
-		</View>
+		<SegmentedButtons
+			value={filter}
+			buttons={[
+				{
+					label: 'My setlists',
+					value: 'owned',
+				},
+				{
+					label: 'Shared with me',
+					value: 'shared',
+				},
+			]}
+			onValueChange={(val: any) => setFilter(val)}
+			style={{ marginBottom: 4 }}
+		/>
 	)
 
 	return (
 		<View style={styles.container}>
 			<FlatList
 				contentContainerStyle={styles.list}
-				ItemSeparatorComponent={() => <Divider full />}
+				ItemSeparatorComponent={() => <Divider full style={{ margin: 1 }} />}
 				data={setlistsList.filter((setlist) => {
 					const isOwned = setlist.owner === user.uid
 					if (filter === 'owned') {

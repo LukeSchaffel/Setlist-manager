@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import React, { SetStateAction, useEffect, useState } from 'react'
 import 'react-native-reanimated'
 import { createContext } from 'react'
+import { PaperProvider } from 'react-native-paper'
 
 import { firebaseConfig } from '@/firebaseConfig'
 import { useColorScheme } from '@/components/useColorScheme'
@@ -85,9 +86,11 @@ function RootLayoutNav() {
 	return (
 		<AppContext.Provider value={{ user }}>
 			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-				<Stack>
-					<Stack.Screen name="(home)" options={{ headerShown: false }} />
-				</Stack>
+				<PaperProvider>
+					<Stack>
+						<Stack.Screen name="(home)" options={{ headerShown: false }} />
+					</Stack>
+				</PaperProvider>
 			</ThemeProvider>
 		</AppContext.Provider>
 	)
