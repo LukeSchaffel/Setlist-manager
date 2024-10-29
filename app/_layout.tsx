@@ -1,9 +1,9 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import { useFonts } from 'expo-font'
-import { Redirect, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { SetStateAction, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
 import { createContext } from 'react'
 import { PaperProvider } from 'react-native-paper'
@@ -11,7 +11,7 @@ import { PaperProvider } from 'react-native-paper'
 import { firebaseConfig } from '@/firebaseConfig'
 import { useColorScheme } from '@/components/useColorScheme'
 import { initializeApp } from 'firebase/app'
-import { getAuth, initializeAuth, Auth, createUserWithEmailAndPassword, onAuthStateChanged, User } from 'firebase/auth'
+import { getAuth, initializeAuth, onAuthStateChanged, User } from 'firebase/auth'
 //@ts-ignore
 import { getReactNativePersistence } from '@firebase/auth/dist/rn/index.js'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'
@@ -89,6 +89,7 @@ function RootLayoutNav() {
 				<PaperProvider>
 					<Stack>
 						<Stack.Screen name="(home)" options={{ headerShown: false }} />
+						<Stack.Screen name="auth" options={{ headerShown: false }} />
 					</Stack>
 				</PaperProvider>
 			</ThemeProvider>
