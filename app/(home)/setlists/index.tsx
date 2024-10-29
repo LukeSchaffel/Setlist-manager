@@ -1,13 +1,11 @@
+import { useContext, useEffect, useState } from 'react'
 import { StyleSheet, FlatList } from 'react-native'
 import dayjs from 'dayjs'
+import { router } from 'expo-router'
+import { SegmentedButtons, List, FAB } from 'react-native-paper'
 
-import { AppContext, auth, db } from '../../_layout'
-import { Button, Text, View, useThemeColor } from '@/components'
-import { SegmentedButtons, List } from 'react-native-paper'
-import { Divider } from '@/components'
-import { useContext, useEffect, useState } from 'react'
-import { get, onValue, ref } from 'firebase/database'
-import { Link, router } from 'expo-router'
+import { AppContext } from '../../_layout'
+import { Text, View, useThemeColor, Divider } from '@/components'
 import { SetlistsContext } from './_layout'
 import { Setlist } from './_layout'
 
@@ -77,6 +75,7 @@ export default function TabTwoScreen() {
 				renderItem={renderItem}
 				ListHeaderComponent={listHeader}
 			/>
+			<FAB icon="plus" style={styles.fab} onPress={() => router.push('/create')} />
 		</View>
 	)
 }
@@ -122,5 +121,11 @@ const styles = StyleSheet.create({
 	dateText: {
 		fontSize: 14,
 		fontWeight: 400,
+	},
+	fab: {
+		position: 'absolute',
+		margin: 16,
+		right: 0,
+		bottom: 0,
 	},
 })
