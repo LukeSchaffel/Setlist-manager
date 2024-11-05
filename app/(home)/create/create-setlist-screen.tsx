@@ -1,11 +1,11 @@
 import { Alert, StyleSheet } from 'react-native'
 import dayjs from 'dayjs'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { push, ref, update } from 'firebase/database'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
+import { Button, Divider } from 'react-native-paper'
 
-import { Text, View } from '@/components'
-import { Input, DatePickerFormItem, Button } from '@/components'
+import { DatePickerFormItem, FormInput, Text, View } from '@/components'
 import { db, auth } from '../../_layout'
 
 export default function CreateSetlistScreen() {
@@ -49,28 +49,20 @@ export default function CreateSetlistScreen() {
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Create new set list</Text>
-			<View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+			<View style={styles.header}>
+				<Text style={styles.title}>Create new set list</Text>
+				<Divider />
+			</View>
 			<View style={styles.form}>
-				<Controller
-					control={control}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<Input label="Name" value={value} onChangeText={onChange} onBlur={onBlur} />
-					)}
-					name="name"
-					rules={{ required: 'Name is required' }}
-				/>
-				<Controller
-					control={control}
-					render={({ field: { onChange, onBlur, value } }) => (
-						<Input label="Location" value={value} onChangeText={onChange} onBlur={onBlur} />
-					)}
-					name="location"
-					rules={{ required: 'Location is required' }}
-				/>
+				<FormInput name="name" label="Name" control={control} />
 				{errors.name && <Text lightColor="red">This is required.</Text>}
+				<FormInput name="location" label="Location" control={control} />
 				<DatePickerFormItem control={control} />
-				<Button.Primary onPress={handleSubmit(onSubmit)}>Submit</Button.Primary>
+			</View>
+			<View style={styles.actions}>
+				<Button mode="contained" onPress={handleSubmit(onSubmit)}>
+					Submit
+				</Button>
 			</View>
 		</View>
 	)
@@ -80,7 +72,10 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 16,
+		justifyContent: 'space-between',
 	},
+	header: {},
+	actions: {},
 	form: {
 		flex: 1,
 		gap: 16,
@@ -88,10 +83,5 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 20,
 		fontWeight: 'bold',
-	},
-	separator: {
-		marginVertical: 30,
-		height: 1,
-		width: '80%',
 	},
 })
