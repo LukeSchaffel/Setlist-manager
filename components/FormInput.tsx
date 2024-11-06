@@ -7,9 +7,10 @@ interface IFormInputProps {
 	name: string
 	label: string
 	rules?: RegisterOptions<any>
+	onChangeText?: (value: any, onChange: any) => any
 }
 
-const FormInput = ({ control, inputProps, name, label, rules }: IFormInputProps) => {
+const FormInput = ({ control, inputProps, name, label, rules, onChangeText }: IFormInputProps) => {
 	return (
 		<Controller
 			name={name}
@@ -21,5 +22,30 @@ const FormInput = ({ control, inputProps, name, label, rules }: IFormInputProps)
 		/>
 	)
 }
+
+const Number = ({ control, inputProps, name, label, rules, onChangeText }: IFormInputProps) => {
+	return (
+		<Controller
+			name={name}
+			control={control}
+			rules={rules}
+			render={({ field: { onChange, onBlur, value } }) => (
+				<TextInput
+					mode="outlined"
+					label={label}
+					value={value}
+					onChangeText={(value) => {
+						if (!isNaN(parseInt(value)) || value === '') {
+							onChange(value)
+						}
+					}}
+					{...inputProps}
+				/>
+			)}
+		/>
+	)
+}
+
+FormInput.Number = Number
 
 export default FormInput

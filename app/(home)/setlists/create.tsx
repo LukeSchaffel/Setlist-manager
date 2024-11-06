@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import { push, ref, update } from 'firebase/database'
 import { router } from 'expo-router'
-import { Button, Divider } from 'react-native-paper'
+import { Button } from 'react-native-paper'
 
 import { DatePickerFormItem, FormInput, Text, View } from '@/components'
 import { db, auth } from '../../_layout'
@@ -49,10 +49,6 @@ export default function CreateSetlistScreen() {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.header}>
-				<Text style={styles.title}>Create new set list</Text>
-				<Divider />
-			</View>
 			<View style={styles.form}>
 				<FormInput name="name" label="Name" control={control} />
 				{errors.name && <Text lightColor="red">This is required.</Text>}

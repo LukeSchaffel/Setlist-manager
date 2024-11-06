@@ -2,8 +2,9 @@ import { Alert, StyleSheet } from 'react-native'
 import { useContext } from 'react'
 import { ref, push, update } from 'firebase/database'
 import { useForm, Controller } from 'react-hook-form'
+import { Button } from 'react-native-paper'
 
-import { Text, View, Input, Button } from '@/components'
+import { View, Input, FormInput } from '@/components'
 import { db } from '@/app/_layout'
 import { SetlistsContext } from '../../_layout'
 
@@ -18,7 +19,7 @@ const SongList = ({}) => {
 		defaultValues: {
 			title: '',
 			artist: '',
-			duration: 0,
+			duration: '',
 		},
 	})
 
@@ -74,37 +75,15 @@ const SongList = ({}) => {
 							<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
 						)}
 						name="title"
-						rules={{ required: 'This is required' }}
 					/>
-					<Controller
-						control={control}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<Input label="Artist" value={value} onChangeText={onChange} onBlur={onBlur} />
-						)}
-						name="artist"
-					/>
-					<Controller
-						control={control}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<Input
-								label="Duration"
-								value={value.toString()}
-								onChangeText={(dur) => {
-									const val = dur
-									if (!isNaN(parseInt(dur))) {
-										onChange(parseInt(dur))
-									} else {
-										onChange(0)
-									}
-								}}
-								onBlur={onBlur}
-							/>
-						)}
-						name="duration"
-					/>
+					<FormInput name="title" control={control} label="Song title" rules={{ required: 'This is required' }} />
+					<FormInput name="artist" label="Artist" control={control} />
+					<FormInput.Number name="duration" label="Duration" control={control} />
 				</View>
 				<View style={styles.buttons}>
-					<Button.Primary onPress={handleSubmit(addSong)}>Add song</Button.Primary>
+					<Button mode="contained" onPress={handleSubmit(addSong)}>
+						Add song
+					</Button>
 				</View>
 			</View>
 		</>
@@ -116,6 +95,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 16,
+		justifyContent: 'space-between',
 	},
 	form: {
 		gap: 16,

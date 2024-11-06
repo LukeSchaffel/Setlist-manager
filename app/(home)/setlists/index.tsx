@@ -75,7 +75,7 @@ export default function TabTwoScreen() {
 				renderItem={renderItem}
 				ListHeaderComponent={listHeader}
 			/>
-			<FAB icon="plus" style={styles.fab} onPress={() => router.push('/create')} />
+			<FAB icon="plus" style={styles.fab} onPress={() => router.push('/setlists/create')} />
 		</View>
 	)
 }
