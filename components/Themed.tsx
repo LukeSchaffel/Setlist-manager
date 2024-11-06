@@ -7,6 +7,7 @@ import { Text as DefaultText, View as DefaultView, TextInput } from 'react-nativ
 
 import Colors from '@/constants/Colors'
 import { useColorScheme } from './useColorScheme'
+import { useTheme } from 'react-native-paper'
 
 type ThemeProps = {
 	lightColor?: string
@@ -30,9 +31,9 @@ export function useThemeColor(
 	}
 }
 
-export function View(props: ViewProps) {
-	const { style, lightColor, darkColor, ...otherProps } = props
-	const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background')
+export const View = (props: ViewProps) => {
+	const { style, ...otherProps } = props
+	const { colors } = useTheme()
 
-	return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />
+	return <DefaultView style={[{ backgroundColor: colors.background }, style]} {...otherProps} />
 }

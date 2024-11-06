@@ -6,7 +6,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import dayjs from 'dayjs'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
-import { Text, Button } from 'react-native-paper'
+import { Text, Button, useTheme } from 'react-native-paper'
 import { formatDuration } from '@/utils'
 import { View, Divider } from '@/components'
 import { db } from '@/app/_layout'
@@ -16,6 +16,7 @@ import Colors from '@/constants/Colors'
 const DetailsPage = () => {
 	const { id } = useLocalSearchParams()
 	const { watchSetlist, selectedSetlist, setSelectedSetlist } = useContext(SetlistsContext)
+	const { colors } = useTheme()
 
 	const navigation = useNavigation()
 
