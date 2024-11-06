@@ -43,13 +43,6 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="create"
-				options={{
-					title: 'Create a setlist',
-					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-				}}
-			/>
-			<Tabs.Screen
 				name="user/index"
 				options={{
 					title: 'My profile',

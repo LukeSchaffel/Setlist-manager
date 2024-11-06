@@ -114,9 +114,9 @@ const SetlistsLayout = () => {
 			<Stack>
 				<Stack.Screen name="index" options={{ headerShown: false, title: 'My setlists ' }} />
 				<Stack.Screen name="[id]/index" options={{ headerShown: true, title: '' }} />
-				<Stack.Screen name="[id]/(songs)/song-list" options={{ title: 'Songs' }} />
+				<Stack.Screen name="[id]/songs/song-list" options={{ title: 'Songs' }} />
 				<Stack.Screen
-					name="[id]/(songs)/add-song"
+					name="[id]/songs/add-song"
 					options={{ presentation: 'modal', title: 'Add a song to this setlist' }}
 				/>
 				<Stack.Screen name="[id]/(members)/member-list" options={{ title: 'Members' }} />

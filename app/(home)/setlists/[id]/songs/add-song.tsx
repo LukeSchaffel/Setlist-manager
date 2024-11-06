@@ -69,13 +69,6 @@ const SongList = ({}) => {
 		<>
 			<View style={styles.container}>
 				<View style={styles.form}>
-					<Controller
-						control={control}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<Input label="Title" value={value} onChangeText={onChange} onBlur={onBlur} />
-						)}
-						name="title"
-					/>
 					<FormInput name="title" control={control} label="Song title" rules={{ required: 'This is required' }} />
 					<FormInput name="artist" label="Artist" control={control} />
 					<FormInput.Number name="duration" label="Duration" control={control} />
