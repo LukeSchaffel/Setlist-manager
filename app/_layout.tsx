@@ -74,12 +74,9 @@ export interface IAppContext {
 
 export const AppContext = createContext<IAppContext>({})
 
-const customDarkTheme = { ...MD3DarkTheme, colors: darkTheme }
-const customLightTheme = { ...MD3LightTheme, colors: lightTheme }
+const customDarkTheme = { ...MD3DarkTheme, colors: darkTheme.colors }
+const customLightTheme = { ...MD3LightTheme, colors: lightTheme.colors }
 
-//4. The adaptNavigationTheme function takes an existing React Navigation
-// theme and returns a React Navigation theme using the colors from
-// Material Design 3.
 const { LightTheme, DarkTheme } = adaptNavigationTheme({
 	reactNavigationLight: NavigationDefaultTheme,
 	reactNavigationDark: NavigationDarkTheme,
@@ -107,9 +104,7 @@ function RootLayoutNav() {
 	return (
 		<AppContext.Provider value={{ user }}>
 			<ThemeProvider value={paperTheme}>
-				<PaperProvider
-					theme={colorScheme === 'dark' ? { ...MD3DarkTheme, ...darkTheme } : { ...MD3LightTheme, ...lightTheme }}
-				>
+				<PaperProvider theme={{ ...paperTheme, roundness: 2 }}>
 					<Stack>
 						<Stack.Screen name="(home)" options={{ headerShown: false }} />
 						<Stack.Screen name="auth" options={{ headerShown: false }} />
