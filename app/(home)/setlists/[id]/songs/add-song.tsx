@@ -1,15 +1,21 @@
 import { Alert, StyleSheet } from 'react-native'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { ref, push, update } from 'firebase/database'
 import { useForm, Controller } from 'react-hook-form'
 import { Button } from 'react-native-paper'
+import { Snackbar } from 'react-native-paper'
 
 import { View, Input, FormInput } from '@/components'
 import { db } from '@/app/_layout'
 import { SetlistsContext } from '../../_layout'
+import { router } from 'expo-router'
 
 const SongList = ({}) => {
 	const { selectedSetlist } = useContext(SetlistsContext)
+	const [snackBar, setSnackBar] = useState<{ visible: boolean; actionId: null | string }>({
+		visible: false,
+		actionId: null,
+	})
 	const {
 		control,
 		handleSubmit,
@@ -58,11 +64,23 @@ const SongList = ({}) => {
 			await update(ref(db), updates)
 
 			// Success message and reset form
-			Alert.alert('Song added successfully')
+			// Alert.alert('Song added successfully')
+			setSnackBar({ visible: true, actionId: newSongId })
 			reset() // Reset form fields
 		} catch (error) {
 			Alert.alert('SOmething went wrong')
 		}
+	}
+
+	const hideSnackBark = () => {
+		setSnackBar({ visible: false, actionId: null })
+	}
+
+	const goToSongDetails = () => {
+		if (!selectedSetlist?.id) {
+			return
+		}
+		router.push(`/setlists/${selectedSetlist.id}/songs/${snackBar.actionId}`)
 	}
 
 	return (
@@ -78,6 +96,14 @@ const SongList = ({}) => {
 						Add song
 					</Button>
 				</View>
+				<Snackbar
+					visible={snackBar.visible}
+					onDismiss={hideSnackBark}
+					duration={1000}
+					action={{ label: 'Add song details', onPress: goToSongDetails }}
+				>
+					Song added!
+				</Snackbar>
 			</View>
 		</>
 	)

@@ -1,9 +1,8 @@
 import React, { useContext, useEffect } from 'react'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { Link, Redirect, router, Tabs } from 'expo-router'
+import { Button } from 'react-native-paper'
 
-import { Button } from '@/components'
-import Colors from '@/constants/Colors'
 import { useColorScheme } from '@/components/useColorScheme'
 import { useClientOnlyValue } from '@/components/useClientOnlyValue'
 import { signOut, getAuth } from 'firebase/auth'
@@ -26,7 +25,6 @@ export default function TabLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
 				// Disable the static render of the header on web
 				// to prevent a hydration error in React Navigation v6.
 				headerShown: useClientOnlyValue(false, true),
@@ -37,9 +35,7 @@ export default function TabLayout() {
 				options={{
 					title: 'My setlists',
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-					headerRight: () => (
-						<Button.Link onPress={() => signOut(auth)}>Logout</Button.Link>
-					),
+					headerRight: () => <Button onPress={() => signOut(auth)}>Logout</Button>,
 				}}
 			/>
 			<Tabs.Screen
