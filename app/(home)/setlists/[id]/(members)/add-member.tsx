@@ -54,7 +54,6 @@ const AddMember = ({}) => {
 		<>
 			<View style={styles.container}>
 				<View style={styles.form}>
-					<FormInput control={control} name="name" label="Name" rules={{ required: 'This is required' }} />
 					<FormInput control={control} name="email" label="Email" rules={{ required: 'This is required' }} />
 					<FormInput control={control} name="role" label="Role/instrument" />
 				</View>

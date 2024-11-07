@@ -68,11 +68,11 @@ export default function RootLayout() {
 }
 
 export interface IAppContext {
-	user?: any
+	user: User | null
 	[key: string]: any
 }
 
-export const AppContext = createContext<IAppContext>({})
+export const AppContext = createContext<IAppContext>({ user: null })
 
 const customDarkTheme = { ...MD3DarkTheme, colors: darkTheme.colors }
 const customLightTheme = { ...MD3LightTheme, colors: lightTheme.colors }
