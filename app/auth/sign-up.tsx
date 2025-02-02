@@ -36,6 +36,7 @@ const AuthScreen = () => {
 			})
 			router.replace('/setlists')
 		} catch (error) {
+			console.log(error)
 			Alert.alert('Something went wrong')
 		}
 	}

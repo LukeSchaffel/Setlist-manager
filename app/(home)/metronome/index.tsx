@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 
+import AntDesign from '@expo/vector-icons/AntDesign'
+import Feather from '@expo/vector-icons/Feather'
 import { View, Text } from '@/components'
 
 export default function MetronomeScreen() {
@@ -34,7 +36,7 @@ export default function MetronomeScreen() {
 				<View style={styles.bottomTop}>
 					<View style={styles.leftButtonContainer}>
 						<Button mode="elevated" onPress={() => setBpm(bpm - 1)}>
-							<Text size={48}>-</Text>
+							<AntDesign name="minus" size={24} color="black" />
 						</Button>
 					</View>
 					<View style={styles.bpmContainer}>
@@ -42,11 +44,20 @@ export default function MetronomeScreen() {
 					</View>
 					<View style={styles.rightButtonContainer}>
 						<Button mode="elevated" onPress={() => setBpm(bpm + 1)}>
-							<Text size={48}>+</Text>
+							<AntDesign name="plus" size={24} color="black" />
 						</Button>
 					</View>
 				</View>
-				<View style={styles.bottomBottom}></View>
+				<View style={styles.bottomBottom}>
+					<Button mode="elevated" onPress={() => setIsPlaying(!isPlaying)} contentStyle={styles.playButton}>
+						<View />
+						{isPlaying ? (
+							<Feather name="pause" size={32} color="black" />
+						) : (
+							<Feather name="play" size={32} color="black" />
+						)}
+					</Button>
+				</View>
 			</View>
 		</View>
 	)
@@ -91,7 +102,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-around',
 	},
-	bottomBottom: { flex: 1 },
+	bottomBottom: { flex: 1, justifyContent: 'flex-start', alignItems: 'center' },
+	playButton: {
+		width: 120,
+		height: 80,
+		alignItems: 'center',
+		justifyContent: 'center',
+		padding: 0,
+	},
 	leftButtonContainer: {},
 	bpmContainer: {},
 	rightButtonContainer: {},
