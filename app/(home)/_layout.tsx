@@ -45,6 +45,13 @@ export default function TabLayout() {
 					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
 				}}
 			/>
+			<Tabs.Screen
+				name="metronome/index"
+				options={{
+					title: 'Metronome',
+					tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+				}}
+			/>
 		</Tabs>
 	)
 }
