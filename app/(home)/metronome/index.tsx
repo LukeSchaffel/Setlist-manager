@@ -1,29 +1,13 @@
-import { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { Button } from 'react-native-paper'
-
+import { Button, TextInput } from 'react-native-paper'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import Feather from '@expo/vector-icons/Feather'
+
+import { useMetronome } from '@/utils/metronome'
 import { View, Text } from '@/components'
 
 export default function MetronomeScreen() {
-	const [bpm, setBpm] = useState(60)
-	const [isPlaying, setIsPlaying] = useState(true)
-	const [isGreen, setIsGreen] = useState(false)
-
-	useEffect(() => {
-		if (!isPlaying) return
-
-		const interval = 60000 / bpm
-
-		const timer = setInterval(() => {
-			setIsGreen(true)
-
-			setTimeout(() => setIsGreen(false), 100)
-		}, interval)
-
-		return () => clearInterval(timer)
-	}, [isPlaying, bpm])
+	const { bpm, isGreen, setBpm, isPlaying, setIsPlaying } = useMetronome()
 
 	return (
 		<View style={styles.container}>
@@ -34,18 +18,34 @@ export default function MetronomeScreen() {
 			</View>
 			<View style={styles.bottom}>
 				<View style={styles.bottomTop}>
-					<View style={styles.leftButtonContainer}>
-						<Button mode="elevated" onPress={() => setBpm(bpm - 1)}>
-							<AntDesign name="minus" size={24} color="black" />
-						</Button>
-					</View>
-					<View style={styles.bpmContainer}>
-						<Text size={48}>{bpm}</Text>
-					</View>
-					<View style={styles.rightButtonContainer}>
-						<Button mode="elevated" onPress={() => setBpm(bpm + 1)}>
-							<AntDesign name="plus" size={24} color="black" />
-						</Button>
+					<View style={styles.controls}>
+						<View style={styles.leftButtonContainer}>
+							<Button mode="elevated" onPress={() => setBpm(bpm - 1)}>
+								<AntDesign name="minus" size={24} color="black" />
+							</Button>
+						</View>
+						<View style={styles.bpmContainer}>
+							<TextInput
+								mode="outlined"
+								contentStyle={{ fontSize: 48 }}
+								keyboardType="number-pad"
+								value={bpm.toString()}
+								onChangeText={(e) => {
+									const value = parseInt(e, 10)
+									if (isNaN(value) || !isFinite(value)) {
+										setBpm(0)
+									} else {
+										setBpm(value)
+									}
+								}}
+								returnKeyType="done"
+							></TextInput>
+						</View>
+						<View style={styles.rightButtonContainer}>
+							<Button mode="elevated" onPress={() => setBpm(bpm + 1)}>
+								<AntDesign name="plus" size={24} color="black" />
+							</Button>
+						</View>
 					</View>
 				</View>
 				<View style={styles.bottomBottom}>
@@ -99,9 +99,8 @@ const styles = StyleSheet.create({
 	bottom: { flex: 1 },
 	bottomTop: {
 		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-around',
 	},
+	controls: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' },
 	bottomBottom: { flex: 1, justifyContent: 'flex-start', alignItems: 'center' },
 	playButton: {
 		width: 120,
