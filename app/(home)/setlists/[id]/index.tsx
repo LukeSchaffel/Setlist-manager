@@ -6,7 +6,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome'
 import dayjs from 'dayjs'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 
-import { Text, Button } from 'react-native-paper'
+import { Text, Button, useTheme } from 'react-native-paper'
 import { formatDuration } from '@/utils'
 import { View, Divider } from '@/components'
 import { db } from '@/app/_layout'
@@ -16,6 +16,7 @@ import Colors from '@/constants/Colors'
 const DetailsPage = () => {
 	const { id } = useLocalSearchParams()
 	const { watchSetlist, selectedSetlist, setSelectedSetlist } = useContext(SetlistsContext)
+	const { colors } = useTheme()
 
 	const navigation = useNavigation()
 
@@ -46,25 +47,23 @@ const DetailsPage = () => {
 			<View style={styles.details}>
 				<View style={styles.iconRow}>
 					<FontAwesome name="calendar" size={24} color={Colors.light.primary} />
-					<Text variant='bodyLarge'>
+					<Text variant="bodyLarge">
 						{selectedSetlist?.date ? dayjs(selectedSetlist?.date || undefined).format('dddd, MMM D, YYYY') : 'No date'}
 					</Text>
 				</View>
 				<View style={styles.iconRow}>
 					<FontAwesome6 name="location-dot" size={24} color={Colors.light.primary} />
-					<Text variant='bodyLarge'>
-						{selectedSetlist?.location || 'No location'}
-					</Text>
+					<Text variant="bodyLarge">{selectedSetlist?.location || 'No location'}</Text>
 				</View>
 				<View style={styles.iconRow}>
 					<FontAwesome name="music" size={24} color={Colors.light.primary} />
-					<Text variant='bodyLarge'>
+					<Text variant="bodyLarge">
 						{selectedSetlist?.songs ? Object.keys(selectedSetlist.songs).length : 0} songs
 					</Text>
 				</View>
 				<View style={styles.iconRow}>
 					<FontAwesome6 name="clock-four" size={24} color={Colors.light.primary} />
-					<Text variant='bodyLarge'>
+					<Text variant="bodyLarge">
 						Total duration:{' '}
 						{selectedSetlist?.songs
 							? formatDuration(Object.values(selectedSetlist.songs).reduce((a, b) => a + b.duration, 0))
@@ -73,7 +72,7 @@ const DetailsPage = () => {
 				</View>
 				<View style={styles.iconRow}>
 					<FontAwesome6 name="people-group" size={24} color={Colors.light.primary} />
-					<Text variant='bodyLarge'>
+					<Text variant="bodyLarge">
 						Shared with {selectedSetlist?.shares ? (Object.values(selectedSetlist.shares).length as number) : 0} user(s)
 					</Text>
 				</View>
@@ -83,24 +82,24 @@ const DetailsPage = () => {
 			<View style={styles.actions}>
 				<View style={styles.actionRow}>
 					<View style={styles.buttonWrapper}>
-						<Button mode='elevated' onPress={() => router.push(`/setlists/${selectedSetlist?.id}/song-list`)}>
+						<Button mode="elevated" onPress={() => router.push(`/setlists/${selectedSetlist?.id}/songs/song-list`)}>
 							View songs
 						</Button>
 					</View>
 					<View style={styles.buttonWrapper}>
-						<Button mode='elevated' onPress={() => router.push(`/setlists/${selectedSetlist?.id}/member-list`)}>
+						<Button mode="elevated" onPress={() => router.push(`/setlists/${selectedSetlist?.id}/member-list`)}>
 							View members
 						</Button>
 					</View>
 				</View>
 				<View style={styles.actionRow}>
 					<View style={styles.buttonWrapper}>
-						<Button mode='elevated' onPress={() => undefined}>
+						<Button mode="elevated" onPress={() => undefined}>
 							Get directions
 						</Button>
 					</View>
 					<View style={styles.buttonWrapper}>
-						<Button mode='elevated' onPress={() => undefined}>
+						<Button mode="elevated" onPress={() => undefined}>
 							Start gig
 						</Button>
 					</View>

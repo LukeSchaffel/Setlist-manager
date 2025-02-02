@@ -1,12 +1,17 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome'
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import {
+	DarkTheme as NavigationDarkTheme,
+	DefaultTheme as NavigationDefaultTheme,
+	ThemeProvider,
+} from '@react-navigation/native'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useState } from 'react'
 import 'react-native-reanimated'
 import { createContext } from 'react'
-import { PaperProvider } from 'react-native-paper'
+import { PaperProvider, MD3DarkTheme, MD3LightTheme, adaptNavigationTheme } from 'react-native-paper'
+import merge from 'deepmerge'
 
 import { firebaseConfig } from '@/firebaseConfig'
 import { useColorScheme } from '@/components/useColorScheme'
@@ -16,6 +21,7 @@ import { getAuth, initializeAuth, onAuthStateChanged, User } from 'firebase/auth
 import { getReactNativePersistence } from '@firebase/auth/dist/rn/index.js'
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'
 import { getDatabase } from 'firebase/database'
+import { darkTheme, lightTheme } from '@/constants/Colors'
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig)
@@ -62,14 +68,26 @@ export default function RootLayout() {
 }
 
 export interface IAppContext {
-	user?: any
+	user: User | null
 	[key: string]: any
 }
 
-export const AppContext = createContext<IAppContext>({})
+export const AppContext = createContext<IAppContext>({ user: null })
+
+const customDarkTheme = { ...MD3DarkTheme, colors: darkTheme.colors }
+const customLightTheme = { ...MD3LightTheme, colors: lightTheme.colors }
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+	reactNavigationLight: NavigationDefaultTheme,
+	reactNavigationDark: NavigationDarkTheme,
+})
+
+const CombinedLightTheme = merge(LightTheme, customLightTheme)
+const CombinedDarkTheme = merge(DarkTheme, customDarkTheme)
 
 function RootLayoutNav() {
 	const colorScheme = useColorScheme()
+	const paperTheme = colorScheme === 'dark' ? CombinedDarkTheme : CombinedLightTheme
 
 	const [user, setUser] = useState<User | null>(null)
 
@@ -85,8 +103,8 @@ function RootLayoutNav() {
 
 	return (
 		<AppContext.Provider value={{ user }}>
-			<ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-				<PaperProvider>
+			<ThemeProvider value={paperTheme}>
+				<PaperProvider theme={{ ...paperTheme, roundness: 2 }}>
 					<Stack>
 						<Stack.Screen name="(home)" options={{ headerShown: false }} />
 						<Stack.Screen name="auth" options={{ headerShown: false }} />

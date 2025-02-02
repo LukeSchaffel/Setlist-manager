@@ -27,7 +27,7 @@ const SongListPage = () => {
 	if (!selectedSetlist) return <></>
 
 	const openAddSongModal = () => {
-		router.push(`/setlists/${id}/add-song`)
+		router.push(`/setlists/${id}/songs/add-song`)
 	}
 
 	const moveSongUp = async (songId: Song['id']) => {
@@ -93,6 +93,7 @@ const SongListPage = () => {
 		const { artist, duration, order, title, id } = item
 		return (
 			<List.Item
+				onPress={() => router.push(`/setlists/${id}/songs/${id}`)}
 				left={() => (
 					<View style={{ justifyContent: 'center', alignItems: 'center' }}>
 						<Text bold size={20}>

@@ -2,19 +2,39 @@ import { useContext, useEffect, useState } from 'react'
 import { db } from '@/app/_layout'
 import { get, ref, query, orderByChild, equalTo, update } from 'firebase/database'
 import { StyleSheet } from 'react-native'
+import AntDesign from '@expo/vector-icons/AntDesign'
+import { List, useTheme, Button } from 'react-native-paper'
+import Entypo from '@expo/vector-icons/Entypo'
+import { Control, useForm } from 'react-hook-form'
 
+import { FormInput } from '@/components'
 import { AppContext } from '@/app/_layout'
-import { Button, Text, View } from '@/components'
+import { Avatar, Text, View } from '@/components'
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import Colors from '@/constants/Colors'
-import { formatDuration } from '@/utils'
+import { getAuth, updateProfile } from 'firebase/auth'
 
 const Index = () => {
 	const { user } = useContext(AppContext)
 	const [shares, setShares] = useState<any[]>([])
+	const { colors } = useTheme()
+	const [edit, setEdit] = useState(false)
+
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+		reset,
+	} = useForm({
+		defaultValues: {
+			displayName: '',
+		},
+	})
+
 	const getShares = async () => {
 		try {
+			if (!user) return
 			const sharesRef = ref(db, '/shares')
 			const snapshot = await get(query(sharesRef, orderByChild('email'), equalTo(user.email)))
 
@@ -45,12 +65,13 @@ const Index = () => {
 
 	const acceptInvite = async () => {
 		try {
+			if (!user) return
 			const shareRef = ref(db, '/shares/' + share.id)
 			const setlistRef = ref(db, '/setlists/' + share.setlist)
 			const userSetlistRef = ref(db, '/users/' + user.uid + '/setlists/')
 
 			// Await each update operation
-			await update(shareRef, { status: 'accepted' })
+			await update(shareRef, { status: 'accepted', name: user.displayName })
 			await update(setlistRef, { updatedAt: Date.now() })
 			await update(userSetlistRef, { [`${share.setlist}`]: true })
 			await getShares()
@@ -75,8 +96,8 @@ const Index = () => {
 
 	const share: any = shares[0]
 
-	return (
-		<View style={styles.page}>
+	const shareUI = (
+		<>
 			{share && (
 				<View style={styles.shareBox}>
 					<Text bold size={24} centered>
@@ -100,18 +121,66 @@ const Index = () => {
 					</View>
 					<View style={styles.actionRow}>
 						<View style={styles.buttonWrapper}>
-							<Button fontSize={20} full onPress={() => acceptInvite()}>
-								Accept
-							</Button>
+							<Button onPress={() => acceptInvite()}>Accept</Button>
 						</View>
 						<View style={styles.buttonWrapper}>
-							<Button fontSize={20} full onPress={() => declineInvite()}>
-								Decline
-							</Button>
+							<Button onPress={() => declineInvite()}>Decline</Button>
 						</View>
 					</View>
 				</View>
 			)}
+		</>
+	)
+
+	const submitProfile = async (values: any) => {
+		try {
+			const auth = getAuth()
+			if (!auth.currentUser) return
+			await updateProfile(auth.currentUser, {
+				displayName: values.displayName,
+				photoURL: 'https://example.com/jane-q-user/profile.jpg',
+			})
+			const updates: any = {}
+			updates[`/users/${auth.currentUser.uid}/displayName`] = values.displayName
+			updates[`/users/${auth.currentUser.uid}/photoURL`] = 'https://example.com/jane-q-user/profile.jpg'
+
+			update(ref(db), updates)
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
+	const form = (
+		<>
+			<FormInput name="displayName" label="Name" control={control} />
+			<Button onPress={handleSubmit(submitProfile)}>Update profile</Button>
+			<Button onPress={() => setEdit(false)}>Cancel</Button>
+		</>
+	)
+
+	return (
+		<View style={styles.page}>
+			<View style={styles.header}>
+				<Avatar user={user} />
+			</View>
+			{!edit ? (
+				<View style={styles.body}>
+					<List.Item
+						titleStyle={{ fontSize: 32, color: colors.secondary }}
+						left={() => <AntDesign name="user" size={32} color={colors.secondary} />}
+						title={user?.displayName || 'Name not provided'}
+					/>
+					<List.Item
+						titleStyle={{ fontSize: 32, color: colors.secondary }}
+						left={() => <Entypo name="email" size={32} color={colors.secondary} />}
+						title={user?.email || 'Name not provided'}
+					/>
+					<Button onPress={() => setEdit(true)}>Edit profile</Button>
+				</View>
+			) : (
+				form
+			)}
+			{shareUI}
 		</View>
 	)
 }
@@ -122,7 +191,13 @@ const styles = StyleSheet.create({
 	page: {
 		flex: 1,
 		padding: 16,
-		justifyContent: 'center',
+		gap: 32,
+	},
+	header: {
+		alignItems: 'center',
+	},
+	body: {
+		flex: 1,
 	},
 	shareBox: {
 		gap: 16,

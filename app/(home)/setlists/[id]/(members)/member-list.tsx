@@ -1,13 +1,11 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext } from 'react'
 import { StyleSheet, FlatList } from 'react-native'
-import { ref, get, update } from 'firebase/database'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5'
+import { Chip, Button } from 'react-native-paper'
 
-import { Text, View, Button, Divider } from '@/components'
-import { db } from '@/app/_layout'
-import { Setlist, SetlistsContext, Song } from '../../_layout'
-import Colors from '@/constants/Colors'
+import { View } from '@/components'
+import { SetlistsContext } from '../../_layout'
+import { List } from 'react-native-paper'
 
 const SongListPage = () => {
 	const { id } = useLocalSearchParams()
@@ -22,39 +20,30 @@ const SongListPage = () => {
 
 	const renderItem = ({ item }: { item: any }) => {
 		const { email, role, name, status } = item
-		const statusColor = { pending: 'orange', declined: 'red', accepted: 'green'  }[status as string]
+		const statusColor = { pending: 'orange', declined: 'red', accepted: 'green' }[status as string]
 		return (
-			<View style={styles.listItem}>
-				<View style={styles.listItemMain}>
-					<View>
-						<Text size={24} bold primary veryBold>
-							{name}
-						</Text>
-					</View>
-					<View>
-						<Text size={16}>
-							{email}
-							<Text size={14}> - {role}</Text>
-						</Text>
-					</View>
-				</View>
-				<View>
-					<Text lightColor={statusColor}>{status}</Text>
-				</View>
-			</View>
+			<>
+				<List.Item
+					title={name}
+					titleStyle={{ fontSize: 20 }}
+					description={role}
+					right={() => (
+						<Chip mode="outlined" textStyle={{ color: statusColor }}>
+							{status}
+						</Chip>
+					)}
+				/>
+			</>
 		)
 	}
 
 	return (
 		<View style={styles.page}>
-			<FlatList
-				renderItem={renderItem}
-				data={selectedSetlist.shares}
-				ItemSeparatorComponent={() => <Divider full />}
-				contentContainerStyle={styles.list}
-			/>
+			<FlatList renderItem={renderItem} data={selectedSetlist.shares} contentContainerStyle={styles.list} />
 			<View style={styles.footer}>
-				<Button.Primary onPress={openAddMemberModal}>Add members</Button.Primary>
+				<Button mode="contained" onPress={openAddMemberModal}>
+					Add members
+				</Button>
 			</View>
 		</View>
 	)
