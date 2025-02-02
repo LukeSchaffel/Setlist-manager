@@ -7,13 +7,18 @@ import { useMetronome } from '@/utils/metronome'
 import { View, Text } from '@/components'
 
 export default function MetronomeScreen() {
-	const { bpm, isGreen, setBpm, isPlaying, setIsPlaying } = useMetronome()
+	const { bpm, isGreen, setBpm, isPlaying, setIsPlaying, totalBeats, currentBeat } = useMetronome()
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.top}>
 				<View style={styles.lightContainer}>
-					<View style={[styles.light, isGreen ? styles.lightOn : styles.lightOff]} />
+					{Array.from({ length: totalBeats }, (_, index) => (
+						<View
+							key={index}
+							style={[styles.light, isGreen && index + 1 === currentBeat ? styles.lightOn : styles.lightOff]}
+						/>
+					))}
 				</View>
 			</View>
 			<View style={styles.bottom}>
@@ -75,6 +80,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		flex: 1,
+		gap: 16,
 	},
 	light: {
 		width: 50,
@@ -110,6 +116,6 @@ const styles = StyleSheet.create({
 		padding: 0,
 	},
 	leftButtonContainer: {},
-	bpmContainer: {},
+	bpmContainer: { flex: 1 / 2 },
 	rightButtonContainer: {},
 })
