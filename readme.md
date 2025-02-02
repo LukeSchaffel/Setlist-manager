@@ -11,6 +11,7 @@ A mobile application built with React Native and Expo that helps musicians manag
 - 📅 Event scheduling with date and location
 - 🔄 Real-time updates and collaboration
 - 🔒 Secure authentication
+- ⏱️ Built-in visual metronome
 
 ## Tech Stack
 
